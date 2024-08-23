@@ -56,7 +56,7 @@ devtools::install_github("eurostat/eurostatRTool")
 
 This should directly install the package from Github, without any other
 steps. You may be asked to update packages. This might not be strictly
-necessary, so you can try skipping this step. The following pacages are required (in brackets are the versions used to develop eurostatRTool
+necessary, so you can try skipping this step. The following packages are required (with versions used to develop eurostatRTool):
 ``` r
 install.packages("configr", version= "0.3.5")
 install.packages("dplyr", version= "1.1.4")
@@ -77,7 +77,19 @@ install.packages("sp", version= "2.1-3")
 install.packages("tidyr", version= "1.3.0")
 install.packages("xlsx", version= "0.6.5")
 ```
+The setup of a renv environment provide a robust and reliable way to
+manage dependencies, ensuring that the R project you will setup to use
+this R package is isolated. By creating a specific renv environment for
+this R package, you will be able to set its dependencies in the same
+version used during the building and testing of the R package, to avoid
+errors due to package updating. The environment will be isolate from
+your other projects, allowing you to change the version of the
+dependencies in other projects without affecting the project you setup
+for using this R package and viceversa.
 
+Setting up an renv environment for this project is recommended but not
+mandatory. You can learn how to do it reading the corresponding vignette
+`Setup-a-renv-environment-for-managing-the-package-dependencies`.
 ## Getting started
 
 The eurostatRTool package requires a little reading and learning to be
@@ -132,18 +144,5 @@ readable format.
 utils::browseVignettes("eurostatRTool")
 ```
 
-## Setup the renv environment
 
-The setup of a renv environment provide a robust and reliable way to
-manage dependencies, ensuring that the R project you will setup to use
-this R package is isolated. By creating a specific renv environment for
-this R package, you will be able to set its dependencies in the same
-version used during the building and testing of the R package, to avoid
-errors due to package updating. The environment will be isolate from
-your other projects, allowing you to change the version of the
-dependencies in other projects without affecting the project you setup
-for using this R package and viceversa.
 
-Setting up an renv environment for this project is recommended but not
-mandatory. You can learn how to do it reading the corresponding vignette
-`Setup-a-renv-environment-for-managing-the-package-dependencies`.
