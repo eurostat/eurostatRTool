@@ -1,0 +1,122 @@
+---
+title: "Setup a renv environment for managing the package dependencies"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{'Setup-a-renv-environment-for-managing-the-package-dependencies'}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+## Introduction
+
+`renv` is an R package that helps manage project-specific R dependencies. It ensures that your project's environment remains consistent and reproducible across different machines and environments. This guide outlines the steps to install and set up `renv` in a new R project and install dependencies within the `renv` environment.
+
+Although packages required for the right use of the eurostatRTool package can be installed following the standard way for package installation in Rstudio, we strongly recommend to use the `renv` environment instead.
+
+## Installing and setting up renv
+
+1. **Install renv**: Start by installing the `renv` package from CRAN. Open your R console or RStudio and run the following command:
+
+    ```R
+    install.packages("renv")
+    ```
+
+2. **Create a new R project**: Start by creating a new R project in your desired directory. You can do this in RStudio by navigating to File > New Project > New Directory > R Project.
+
+3. **Initialize renv in your project**: Navigate to your project directory within RStudio or set it as the working directory using the following command:
+
+    ```R
+    setwd("path_to_your_project_directory")
+    ```
+
+    Then, initialize `renv` within your project directory:
+
+    ```R
+    renv::init()
+    ```
+
+    This command sets up `renv` in your project directory and creates the necessary files.
+
+## Installing Dependencies in renv Environment
+
+Once `renv` is set up in your project, you can install and manage dependencies within the `renv` environment. Below are the dependencies along with their versions specified after the `==` sign:
+
+- configr (== 0.3.5)
+- dplyr (== 1.1.4)
+- DT (== 0.32)
+- flexdashboard (== 0.6.2)
+- htmltools (== 0.5.8)
+- leaflet (== 2.2.1)
+- lubridate (== 1.9.3)
+- magick (== 2.8.3)
+- magrittr (== 2.0.3)
+- mapview (== 2.11.2)
+- metathis (== 1.1.4)
+- plotly (== 4.10.3)
+- rmarkdown (== 2.25)
+- shiny (== 1.8.0)
+- shinydashboard (== 0.7.2)
+- sp (== 2.1.3)
+- tidyr (== 1.3.0)
+- tools (== 4.3.2)
+- utils (== 4.3.2)
+- xlsx (== 0.6.5)
+
+To install these dependencies in the `renv` environment, follow these steps:
+
+1. **Open R console or RStudio**: Make sure you are working within your project directory.
+
+2. **Install dependencies**: Use the `renv::install()` function to install all the dependencies:
+
+    ```R
+    renv::install(c(
+        "configr@0.3.5",
+        "dplyr@1.1.4",
+        "DT@0.32",
+        "flexdashboard@0.6.2",
+        "htmltools@0.5.8",
+        "leaflet@2.2.1",
+        "lubridate@1.9.3",
+        "magick@2.8.3",
+        "magrittr@2.0.3",
+        "mapview@2.11.2",
+        "metathis@1.1.4",
+        "plotly@4.10.3",
+        "rmarkdown@2.25",
+        "shiny@1.8.0",
+        "shinydashboard@0.7.2",
+        "sp@2.1-3",
+        "tidyr@1.3.0",
+        "tools@4.3.2",
+        "utils@4.3.2",
+        "xlsx@0.6.5"
+    ))
+    ```
+
+3. **Snapshot the environment**: After installing all dependencies, take a snapshot of the environment by running:
+
+    ```R
+    renv::snapshot()
+    ```
+
+    This creates or updates the `renv.lock` file, which contains information about the project's environment.
+
+## Load the eurostatRTool package in the project
+
+Now that your project environment is ready, you can load the eurostatRTool package by `library(eurostatRTool)`
+and start to use it.
+
+## Conclusion
+
+By setting up `renv` in your R project and managing dependencies within the `renv` environment, you ensure reproducibility and consistency in your R project's environment. This helps maintain the integrity of your project across different systems and facilitates collaboration among team members.
+
+For more information on using `renv`, refer to the official documentation: [renv documentation](https://rstudio.github.io/renv/)

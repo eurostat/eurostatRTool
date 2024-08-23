@@ -1,0 +1,20 @@
+.navbar-logo img {
+  position: absolute;
+  right: 5px;
+}
+
+@media (min-width: 1370px) {
+
+  .navbar-left {
+    margin-right: 300px;
+  }
+
+}
+
+@media (min-width: 768px) {
+
+  .navbar>.container-fluid .navbar-brand {
+    margin-left: -15px !important;
+  }
+
+}

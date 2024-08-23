@@ -1,0 +1,839 @@
+---
+title: "General workflow for building and maintaining a customised dashboard for
+your organisation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{'General-workflow-for-building-and-maintaining-your-dashboard'}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+```{r setup}
+library(eurostatRTool)
+```
+
+This document is a complete guide on how to build and maintain your own customised dashboard. Here you will discover all the functionalities and customisation options that the package offers to best adapt the final dashboard to your specific needs.
+
+We will start describing how to upload your own data and how to choose the final set of visualisation elements -plots, maps, tables- to be displayed in the dashboard. Then we will show how to customise the dashboard layout.
+
+## Working with your own data: an introduction to files and display modes
+
+For creating the dashboard, we will rely in four main different files that should be created/provided by the person using the R package with the purpose of running functions for updating the input data, customising the dashboard and generating it, hereafter, the dashboard manager. 
+
+**data.csv and forecasts.xlsx**
+
+These files contain all the data -i.e., time series of the indicators- to be displayed. Historical and present data on the indicators will be stored in the `data.csv` file whereas information on forecasts will be saved in the `forecasts.xlsx` file. As we further explain below, the `forecasts.xlsx` file does not necessarily contain forecasts data but any data that is going to be displayed as horizontal bars.
+
+**dashboard-structure.xlsx**
+
+In this file the dashboard manager is allowed to define the specific display modes -plots, maps, tables- and their details -titles, data sources, etc.- for each indicator to be visualised in the dashboard. 
+
+**dim-labels.csv**
+
+In case they exist, this file links the levels of the indicator's factor group -e.g., geopolitical entities, gender classes, indicator components, others- coded in the `data.csv` file with the labels that will be displayed for each group level in the final dashboard. Please keep in mind that those groups in the `data.csv` file that are not included in the `dim-labels.csv` file will not be displayed in the final visualisation.
+
+We strongly recommend creating both data.csv and `dim-labels.csv` files at the same time as they contain interlinked information. 
+
+### Input data structure and templates
+
+To avoid errors in the data structure, the dashboard manager can rely on the sample data files that were used in the demonstration dashboards. These files can be used as templates to be edited and updated accordingly. 
+
+The sample files are available from the [GitHub page of the project](https://github.com/Randbee/eurostatRTool/), in the folder `inst` and within the later, in the `extdata` folder. 
+
+The two files containing the data respectively used in the Eurostatistics and the NSI scenarios, are `data.csv` and `data-italy.csv`. Although they contain different data and indicators, both share the same structure. This data structure is the one that the dashboard manager must accurately follow to build his/her own data files.
+
+Regarding information on forecasts, the two files containing these data are `forecasts.xlsx` and `forecasts-italy.xlsx` for the Eurostatistics and NSI scenarios respectively. These Excel files contain as many sheets as forecasts (i.e., horizontal bar) plots to be displayed in the dashboard -three in the Eurostatistics scenario and just one in the NSI scenario-. However, both files share the same structure which must be also accurately followed by the dashboard manager to build his/her own forecasts plots. 
+
+In relation to the dashboard structure, the sample data files are
+`dashboard-structure.xlsx` and `dashboard-structure-italy.xlsx`, for the Eurostatistics and NSI scenarios, respectively. Both files also have the same structure, although the file for the NSI scenario contains a lower number of rows -lesser number of indicators to be displayed- and a lower number of columns -lesser number of display modes, as maps and tables are not implemented in this scenario-. 
+
+Finally, the sample files where the link between indicator codes and labels is defined are named `dim-labels.csv` and `dim-labels-italy.csv`, for the Eurostatistics and the NSI scenarios, respectively. The `DIM` column specifies categories within a single dimension relevant to each indicator. For instance, this could include geographic areas such as regions or countries, age groups, gender categories, or economic sectors, depending on the dimension applicable to the indicator. Both files mostly share their structure, although the column `group` is missing in the file for the NSI scenario. Further details in this regard are provided below in this vignette.
+
+Please avoid Microsoft Excel or Numbers for editing the `.csv` files as they can cause formatting issues -quotes, dates, others- when saving the files. Instead, we recommend you to edit the `.csv` files using a text editor. However, Microsoft Excel is the right tool for editing the `.xlsx` files.
+
+In the following sections we will detail the exact working of these files and how we can adapt their content to build a customised dashboard for specific visualisation purposes.
+
+### Description of the available display modes
+
+First of all, we will describe the multiple display modes for the data that are allowed in the tool. Specifically, it is possible to implement seven different display modes: timeline plot (time series plot), comp_barchart plot (vertical bar plot for comparisons across data), double scale plot (for displaying two different time series with different scale), point_linechart plot (time series displayed as lines and points in the same plot), forecast plot (horizontal bar plot), map and table.
+
+#### Timeline plot
+
+The timeline plot is a line plot representing the evolution of the time series for the indicator over time. The plot displays as many lines as levels has the factor group specified in the column `DIM` within the `data.csv` file.
+
+We can see a use case of timeline plot with just one time series in the demonstration NSI dashboard -see the vignette `Demonstration-dashboards-showing-the-functionalities-of-the-tool` to find out how to generate the demonstration dashboards-. Specifically in the `Industrial producer prices` indicator, where only national data for Italy -no factor group- are displayed.
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/IPP-italy.png')
+```
+
+In contrast, in this same demonstration dashboard we can also find a timeline plot where multiple time series -belonging to different geopolitical entities- are displayed in the form of multiple line plots.
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/IP-italy.png')
+```
+
+#### Comp_barchart plot
+
+The comp_barchart plot is a bar plot which compares the last value of the time series for one indicator against the previous one, considering all the levels in the factor group contained in the column `DIM` within the `data.csv` file.
+
+A use case of comp_barchart plot is shown in the NSI demonstration dashboard for the `Import prices` indicator, where the import prices of the last two months are compared for three different geographical areas.
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/IP-bar-italy.png')
+```
+
+Similarly, in the same demonstration dashboard, for the `Consumer prices (inflation)` indicator, inflation of the last two months for all the available administrative regions included in the in the column `DIM` within the `data-italy.csv` file is displayed.
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/inflation-bar-italy.png')
+```
+
+Apart from geopolitical or other geographical delimited entities, like countries or
+regions, we can also visualise other factor groups such as gender. See for instance the `Employment rate` indicator in the NSI demonstration dashboard:
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/employment-italy.png')
+```
+
+or indicator components, such as in the case of the plots displaying the data for the `Components of GDP` indicator in the same demonstration dashboard:
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/GDP-comp-italy.png')
+```
+
+#### Double scale plot
+
+The double scale graph is a line plot with double scale. Originally it was designed to show two different scales, one for the indicator and its trend and one for its cycle. Trends are the natural tendency of the series to variate or remain constant in the long-term in absence of any other influencing variable. The cycle component expresses the deviation of the series from the trend as a sequence of fluctuations around the long-term trend. Therefore, three different lines are displayed in the plot: indicator, trend and cycle. Currently three different filters are allowed depending on the method used for decomposing the time series -Hodrick-Prescott, Christiano-Fitzgerald, Unobserved Components-. Trend and cycle estimates must be calculated externally and then added into the `data.csv` file as additional indicators -see the `data.csv` sample file-.
+
+An example of an indicator displayed using a double scale plot can be found in the Eurostatistics demonstration dashboard, `Gross Domestic Product (GDP)`, where the plot shows the GDP in the Euro Area (and below in the EU), with its trend and cycle, applying the three different estimation methods previously defined.
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/double-scale.png')
+```
+
+In principle, this double scale plot can be used to visualise any data series with different scale and not only decomposition results. However, as currently there is no specific function for this aim in the eurostatRTool package, in case the dashboard manager wants to change the labels in the filtering options he/she will have to modify this text directly in the source code.
+
+#### Point_linechart plot
+
+The point_linechart was originally created to display the €-coin indicator, a monthly ‘smoothed’ estimate of quarter-on-quarter GDP growth in the euro area, calculated by the Banca d’Italia. This is a specific plot used in the Eurostatistics scenario thus the only use case available is in this demonstration scenario for the €-coin indicator. 
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/ecoin.png')
+```
+
+However, this display mode can be used with any other data specified in the `data.csv` file that requires to be visualised showing data series both as lines and points.
+
+#### Forecasts plot
+
+The forecasts plot is a horizontal bar plot showing the forecasted values for one indicator, made at different time periods, by different entities and for different years. We can find a use case of forecasts plots in the Eurostatistics demonstration dashboard, `GDP growth` indicator, showing forecasts for the GDP growth in years 2023 and 2024, made by different entities -European Commission, IMF, OECD, ECB- in different time periods -seasons and months-.
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/forecasts.png')
+```
+
+In the NSI demonstration dashboard, we can observe an alternative use case for this display mode. Instead of displaying the forecasts for two different years, the plots show forecasts for two different indicators: GDP and inflation.
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/forecasts-italy.png')
+```
+
+Although this display mode was originally designed to visualise data on forecasts, the dashboard manager can select this visualisation type to display any indicator that requires a horizontal bar plot as long as the data format requirements are met (see further details in this regard below).
+
+#### Map
+
+Apart from plots, you can also allow the visualisation of your data as maps. Use cases of dashboards including maps can only be found in the Eurostatistics scenario because this display mode requires the input data to specify as factor group for the data -coded in the `DIM` column- the Euro Area (EA) countries. Therefore it does not allow for subnational spatial representations or for the representation of other countries out of the EA. As a sample, below we show, from the Eurostatistics demonstration dashboard, the `GDP growth` indicator, showing GDP growth in the different Member States over time.
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/map-GDP.png')
+```
+
+Please be aware that, due to an unexpected interaction between leaflet and the `storyboard` structure type for the secondary menu (see the `update_secondary_menu(type)` function for changing this structure), the map legend stretches depending on the length of the text. The dashboard manager has two options to overcome this bug. On the one hand, i) to choose a `dropdown` secondary menu structure type for the dashboard using the `update_secondary_menu(type)` function; alternatively, ii) the title for the legend in the map can be kept empty in the `dashboard-structure.xlsx` file.
+
+#### Table
+
+Finally, the indicators can be also visualised in the dashboard in tabular format, as in this example extracted for the `GDP growth` indicator in the Eurostatistics demonstration dashboard:
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/table-GDP.png')
+```
+
+Now that you are aware of the visualisation functionalities that the tool provides, let's look deeper into the data files that are required.
+
+## Full description of the structure of the files
+
+### The data.csv file
+
+This file -see the sample files `data.csv` and `data-italy.csv`, for the Eurostatistics and the NSI demonstration dashboards, respectively-  contains the historical and present time series data on the indicators to be displayed in the dashboard. Data on forecasted values of the indicators (or any other data that is going to be displayed as horizontal bars) are not included in this main file but in the `forecasts.xlsx` file, see below for further details.  The main file has five columns represented in the following columns:
+
+* `date`: date of the observation (as `yyyy-mm-dd`)
+
+* `IND`: unique code identifying the indicator
+
+* `FREQ`: frequency of data collection. M: monthly; Q: quarterly; A: annually
+
+* `DIM`: factor group for the indicator, e.g., geopolitical entity, gender, indicator component, others. If there is no group in the data, this column can be filled with a constant.
+
+* `obsValue`: value of the indicator for each observation
+
+While the `date`, `FREQ` and `obsValue` columns are intuitive and easy to understand, the `IND` and `DIM` columns require further explanations.
+
+`IND` is the unique identifier of the particular indicator, usually inherited from the original source for the data. This unique identifier can be also manually generated by the dashboard manager. This column allows for any string of characters except for blank spaces (instead use `-` or `_`). For example `GDP`, `GDP-growth` or `GDP_growth` would be three acceptable alternative codes for identifying the GDP indicator. Please have in mind that the identifier will not be displayed in the visualisation, as labels to be displayed in the plots, tables and maps are specified by the dashboard manager through other files (in the `dashboard-structure.xlsx` and the `dim-label.csv` files).   
+
+`DIM` codes for the categories within a single dimension relevant to each indicator are listed in the `IND` column. For instance, this could include geographic areas such as regions or countries, age groups, gender categories, or economic sectors, among others, depending on the dimension applicable to the indicator. These categories can be geopolitical entities where the value is observed (e.g., `EU`, `EA`, Member State, regions) or any other type of group, such as gender, as in the `Employment rate` indicator within the sample file `data-italy.csv`:
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/employment-italy.png')
+```
+
+indicator components, as in the `Components of GDP` indicator in the sample file `data-italy.csv`, where the `DIM` column contains different codes for the multiple components of the GDP:
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/GDP-comp-italy.png')
+```
+
+Codes to be used in the `DIM` column can be any character string (avoiding blank spaces, which are not allowed, and using instead `-` or `_`). For example, `EU`, `European-Union` or `European_Union` are allowed strings for coding a `DIM` level. The `DIM` code  will not either be displayed in the visualisation, as labels to be shown in the plots, tables and maps in relation to the factor group are specified by the dashboard manager through the `dim-label.csv` file.  
+
+If there are no factor group for the particular indicator (e.g., only data at national level, as in the `GDP` indicator of the sample `data-italy.csv`), the `DIM` column can be filled by the dashboard manager with a constant value and only one time series will be displayed in the plot. In this case the legend, since it is not necessary, will be kept hidden in the final visualisation. 
+
+Please have in mind that the `DIM` column specifies categories within a single dimension relevant to each indicator listed in the `IND` column. Therefore, only categories from one dimension are allowed per indicator in the `IND` column. Mixing categories from two different dimensions —like age and gender— in the `DIM` column for a single indicator is not acceptable. However, it is permissible to associate categories from one dimension with one indicator and categories from a different dimension with another indicator. In this sense, in case the dashboard manager needs to display multiple factor groups for the same indicator, both the `IND` and the `DIM` columns can be used in combination to create multiple visualisations. For example, if you aim to visualise both age and geopolitical entity groups for unemployment data, you can create an indicator coded in the `IND` as `UNEMP_YOUTH`, which will be the indicator data for youth unemployment, and `UNEMP_ADULT`, which will code for the adult unemployment data, and simultaneously indicate the geopolitical entities (e.g., Member states) in the `DIM` column for both `IND` codes (see for instance the sample data file `data.csv`). In this way, the two age levels for unemployment could be visualised in separate tabs of the dashboard. A visual example can be observed for the `Total unemployment` and `Youth unemployment` indicators displayed in the Eurostatistics demonstration dashboard.
+
+Regarding the data format, it is crucial to follow exactly the same formatting as in the sample files:
+
+"date","IND","FREQ","DIM","obsValue"
+
+2021-06-01,"GDP","Q","IT",2.566
+
+2023-01-01,"CPI","M","ITF35",NA
+
+Of particular importance is the date format, which must be `yyyy-mm-dd`. The `IND`, `FREQ` and `DIM` values needs to be enclosed in double quotes and, remember, they must not contain any blank spaces. Regarding the `obsValue`, it is a numeric value, with floating
+point "." for decimal positions or `NA` when the value is missing.
+
+### The forecasts.xlsx file
+
+As mentioned above, the `forecasts.xlsx` file contains data on forecasts for the indicators in specific years and/or time periods. However, this file may contain any data that requires to be displayed as horizontal bars. 
+
+You can find the most complete data example on this file type in the sample `forecasts.xlsx` file used to create the Eurostatistics demonstration dashboard. This file is split in three different sheets. The first sheet and the subsequent ones differ, because they allow to visualise different types of forecast plots, although all of them are horizontal bar plots.
+
+#### Sheet1
+
+This first sheet `Sheet1` generates a forecast plot where the dashboard manager can indicate both the moment when the forecast was made and the year for which the forecast is made. The different rows in this sheet contain multiple forecasts for the same indicator and year provided by different institutions at different time points:
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/forecasts.png')
+```
+
+The data in the first two columns of the sheet are displayed in the two y-axes
+of the plot, whereas the x-axis shows the forecasts for the indicators (`GDP_growth` and `Inflation` in the example above) in different years (2023 and 2024 in our example), which are stored in the next four columns, one column for each indicator and year. In these next columns, the indicator name and the specific year for the data must be indicated by the dashboard manager in the main and secondary headers, respectively. The indicators (`GDP_growth` and `Annual inflation` in our example) are displayed in separated tabs (see the Eurostatistics demonstration dashboard).
+Once again, the indicators can be coded as any character string except for blank spaces which are not allowed. Instead, you are allowed to use `-` or `_`.
+
+If forecasts are just available for one time stamp (e.g., one year) then forecasts for two different indicators can be displayed in the same plot instead of forecasts for the same indicator in two different years. An example of this use case can be found in the `forecasts-italy.xlsx` sample file which has been used to build the NSI demonstration dashboard (see the `GDP and Inflation Forecasts`):
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/forecasts-italy.png')
+```
+
+While keeping the data format and structure of the input file, a variety of data and groups (and not only forecasts by indicator/forecasts by year) can be visualised as horizontal bar plots, since any data fulfilling the required format will work. Just ensure not to change the data format and structure when you update the file.
+
+#### Sheet2 and Sheet3
+
+The two other sheets in this file generate a different type of forecast plot, one plot per sheet although both plots are of equal type (horizontal bar plots). In these plots, the different groups indicated in the first column of the sheet (geopolitical entities, according to the `forecasts.xlsx` sample file) are visualised in the y-axis of the plot, whereas the data in the eight subsequent columns, which in the sample file contains the forecasts for the indicator made by different institutions at different time points, are displayed as different data series in the plot (see the Eurostatiscs demonstration dashboard):
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/forecasts-type2.png')
+```
+
+From the eight subsequent data columns, the data on the first four ones are displayed in one plot, whereas the last four ones are included in a second plot, which is shown below the previous. In this way, the data series to be displayed are split to enhance their visualisation in the resulting plots. If additional columns were added into the file, these data would be visualised in a third plot.
+
+In the Sheet2 and Sheet3 it is crucial to keep the format for the headers of the columns: `organisation - time period`, as this information is used in the code to define which is the number of organisations to be displayed, and therefore the number of final number of plots. However, as above, while keeping the data format and structure, the groups for visualising the data (organisations, time period) could be changed by alternative ones according to your needs. 
+
+### The dashbord-structure.xlsx file
+
+The `dashboard-structure.xlsx` file contains the information required to build the general dashboard structure. With its 37 columns, and one row per indicator to be displayed in the dashboard, it is the most complex file you will have to manage. You can find a thoroughly description of all the columns below:
+
+* `box`: this is a text field (caution, as it is not a floating number) representing the relative position of the element (i.e., indicator) in the primary and secondary headings of the dashboard. The first number (the one before the ".") defines the position in the primary heading, while the second number (after the ".") indicates the position in the secondary heading.
+
+For example, for the Eurostatistics demonstration dashboard, `Annual inflation` is contained in the first topic of the main heading -i.e., `Economy`- and it is the second element of the secondary heading, thus it has assigned the value 1.2 in `box` (see the `dashboard-structure.xlsx` sample file).  Please note that the `Overview` section is not consider in this list as it is not a topic for structuring the indicators in the dashboard but a general introduction to the tool and it takes the data to be displayed in it from a different source (more details in the `Overview` section below). The next indicator is the `1.3`, i.e. `Economic Sentiment Indicator (ESI)`. Similarly, in the second topic of the main heading, `Business and Trade`, the first indicator displayed is `Industrial production`, and therefore its corresponding value assigned in `box` is `2.1`.
+
+If more than one element (i.e., indicator) present the same box number, instead of being displayed in separated tabs, they are shown one above the other, see for instance the `Business and Growth Cycle Coincident Indicators` in box `4.2` in the Eurostatistics demonstration dashboard.
+
+Please remember that the Eurostatistics and the NSI scenarios differ in the structure of their main headings. This structure is predetermined thus the dashboard manager is only allowed to change the content of the secondary heading using the `dashboard-structure.xlsx` file. Depending on the choice of the scenario, you will have to adapt the numeration to the specific scenario (see `dashboard-structure.xlsx` and `dashboard-structure-italy.xlsx` sample files for the Eurostatistics and the NSI demonstration dashboards, respectively). In this way, under the NSI scenario, the value `1.1` box refers to the first element in the `Economic situation` topic of the main heading: `GDP at market prices`.
+
+* `title`: this is the name of the indicator that will be displayed in the secondary menu. In case that multiple elements are included in the same box, as for the box `4.2` that we mentioned above in the Eurostatistics demonstration dashboard, only the title for the first element will be used, thus for the next elements you can leave the `title` cells empty.
+
+* `description`: a descriptive text where you can provide a short interpretation of the data visualisation for this indicator. This text is displayed in the right side of the dashboard. It is written in R Markdown language. Guidelines on the syntax in R Markdown can be found at Chapter `3. Markdown` in the [R Markdown Cheat Sheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf).
+Regarding the syntax for writing your own descriptive texts, the most important syntax topics that you should focus on are the way italics, bold, links and headers are coded. Additional guidance on this syntax can be also found in the `description` fields in the `dashboard-structure.xlsx` sample file. In case multiple elements are included in the same box, only the description for the first element will be used, so for the next elements you can leave the cells empty.
+
+* `graph_title`: the title to be shown in all the display modes (plots, map, table) for that indicator. Please avoid long titles as in the mobile version of the dashboard could not look good.
+
+* `timeline`: this is a text field (not boolean), that must contain `TRUE` if
+you want to display the timeline plot showing the time series of the indicator, and `FALSE` or empty in case not.
+
+* `timeline_ind`: in this field you have to indicate the unique identifier for the data to be displayed in the plot. Remember that this unique identifier is contained in the `data.csv` file, in the `IND` column. In this way, you are specifying from where to extract the information for building the timeline plot.
+
+* `timeline_subtitle`: the subtitle shown in the timeline plot. Please avoid
+long subtitles as in the mobile version of the dashboard they could not look good.
+
+* `timeline_source`: the original source for the data to be displayed and which will be cited below the timeline plot. This field needs to be written in `HTML`, linking the web page to the text:
+
+`<a href="linked-page-url">linked-text-to-show</a>`
+
+For further guidance, you can see examples on how to write this `HTML` in the `dashboard-structure.xlsx` sample file.
+
+* `comp_barchart`: this is a text field (not boolean), that must contain `TRUE` if
+you want to show the comp_barchart plot for the indicator, and `FALSE` or keep empty in case not.
+
+* `comp_barchart_ind`: in this field you have to indicate the unique identifier for the data to be displayed in the plot. Remember that this unique identifier is contained in the `data.csv` file, in the `IND` column. In this way, you are specifying from where to extract the information for building the plot.
+
+* `comp_barchart_subtitle`: the subtitle to be displayed in the comp_barchart plot. Please avoid long subtitles as in the mobile version of the dashboard they could not
+look good.
+
+* `comp_barchart_source`: the original source for the data to be displayed and which will be show below the plot. This field needs to be written in `HTML` (for further instructions please see the `timeline_source` field description above). 
+
+* `double_scale`: this is a text field (not boolean), that must contain `TRUE` if you want to display the double scale plot for the indicator, and `FALSE` or keep empty if in case not.
+
+* `double_scale_ind`: in this field you have to indicate the unique identifier for the data to be displayed in the plot. Remember that this unique identifier is contained in the `data.csv` file, in the `IND` column. In this way, you are specifying from where to extract the information for building the plot. The code required to fill this field has to correspond with the code for the data you want to use for building the double scale plot. Remember that this plot shows one time series for the indicator, one for the trend and an additional one for the cycle. Both trend and cycle must be calculated outside the tool and then included in the `data.csv` file. Specifically, in the `data.csv` sample file, the data to build the double scale plot for the `GDP` indicator have been assigned the following codes: `TCD_GDP_IND` (for the time series of the indicator), `TCD_GDP_UC_TREND` and `TCD_GDP_UC_CYCLE` (for the trend and the cycle using the unobserved components filter, respectively), `TCD_GDP_HP_TREND` and `TCD_GDP_HP_CYCLE` (for the trend and the cycle using the Hodrick-Prescott filter, respectively), `TCD_GDP_CF_TREND` and `TCD_GDP_CF_CYCLE` for the trend and cycle using the Christiano-Fitzgerald filter, respectively). More information on how to deal with these multiple time series for just one indicator in this visualisation mode is provided below in the section 'Putting all together'.
+
+* `double_scale_dim`: this is the field where you indicate which level of the factor group (e.g., geopolitical entity, gender, indicator component, others) will be used to build the double scale plot, as this display mode does not allow for multiple groups to be visualised. Specifically, you should specify the identifier corresponding to the level of the particular group. Remember that this identifier is contained in the `data.csv` file, in the `DIM` column. For example, a group level for the `GDP` indicator could be `EU` (see an example in the Eurostatistics demonstration dashboard, in the topic `Trend and cycle estimates` of the main heading).
+
+* `double_scale_subtitle`: the subtitle to be shown in the double scale graph.
+Please avoid long subtitles as in the mobile version of the dashboard they could not
+look good.
+
+* `double_scale_source`: the original source for the data to be displayed and which will be cited show below the plot. This field needs to be written in `HTML` (for further instructions please see the `timeline_source` field description above).
+
+* `point_linechart`: this is a text field (not boolean), that must contain `TRUE` if
+you want to show the point_linechart plot for the indicator, and `FALSE` or keep empty in case not.
+
+* `point_linechart_dim`: this is the field where you indicate which level of the factor group (e.g., geopolitical entity, gender, indicator component, others) will be used to build the double scale plot, as this display mode does not allow for multiple groups to be visualised. Specifically, you should specify the identifier corresponding to the level of the particular group. Remember that this identifier is contained in the `data.csv` file, in the `DIM` column. 
+
+* `point_linechart_ind_point_linechart`: in this field you have to indicate the unique identifier for the data on the point_linechart to be displayed (in principle, the monthly ‘smoothed’ estimate of quarter-on-quarter GDP growth in the euro area by the Banca d’Italia, although any other data series could be potentially displayed if desired). Remember that this unique identifier is contained in the `data.csv` file, in the `IND` column. In this way, you are specifying from where to extract the information for building the plot. For example, in the `data.csv` sample file, the unique identifier in the `IND` column for point_linechart is `POINT`.
+
+* `point_linechart_ind_gdp`: in this field you have to indicate the unique identifier for the data on the quarter-on-quarter data, in principle GDP growth in the euro area, to be also displayed in the plot as points. Remember that this unique identifier is contained in the `data.csv` file, in the `IND` column. In this way, you are specifying from where to extract the information for building the plot. For example, in the `data.csv` sample file, the unique identifier in the `IND` column for the quarter-on-quarter GDP growth is `GDP_QOQ`.
+
+* `point_linechart_subtitle`: the subtitle to be shown in the point_linechart_chart plot.
+Please avoid long subtitles as in the mobile version of the dashboard they could not
+look good.
+
+* `point_linechart_source`: the original source for the data to be displayed and which will be cited below the plot. This field needs to be written in `HTML` (for further instructions please see the `timeline_source` field description above).
+
+* `forecast_chart`: this is a text field (not boolean), that must contain `TRUE` if
+you want to show the forecast plot for the indicator, and `FALSE` or keep empty in case not.
+
+* `forecast_chart_ind`: in this field you are indicating from where to extract the forecast data (or any other data type if desired) for building this horizontal bar plot. As we fully described above, there are two forecast plot types, and the sheets for building them have different structure. For the first type of forecast plot, the Sheet1 may include data on more than one indicator (specified as column names) but separated plots will be built for the different indicators in the Sheet1. For example, in the `forecasts.xlsx` sample data, two indicators, `GDP_growth` and `Inflation`, are used to generate two separated plots in the Eurostatistics demonstration dashboard, one for `GDP growth` and one for `Annual inflation`. Therefore, for display mode, we need to specify in this field which indicator will be used to create the plot. For this aim you need to fill this field with the heading for the indicator of interest in the Sheet1 of the `forecasts.xlsx` file. For the second forecast plot (in Sheet2 and Sheet3), all the data contained in the sheet are visualised in the same plot, thus there is no need to specify anything in this field and we can keep it empty. The specific sheet where the data for the indicator are stored is specified in the next field.
+
+* `forecast_chart_xlsx_sheet_name`: the name of the sheet in the `forecasts.xlsx` file containing the data to be displayed in the plot.
+
+* `forecast_chart_source`: the original source for the data to be displayed and which will be cited show below the plot. This field needs to be written in `HTML` (for further instructions please see the `timeline_source` field description above).
+
+* `map`: this is a text field (not boolean), that must contain `TRUE` if
+you want to display a map showing an spatial representation of the indicator, and `FALSE` or keep empty in case not.
+
+* `map_ind`: in this field you have to indicate the unique identifier for the data to be displayed in the map. Remember that this unique identifier is contained in the `data.csv` file, in the `IND` column. In this way, you are specifying from where to extract the information for building the map. Please, remember also that maps can only be displayed if the data for the indicator has a factor group (`DIM` column) including the European countries to which the data to be displayed belong, as subnational spatial representations are not allowed and only Euro Area (EA) countries have spatial geometries available to be mapped in this version of the tool.
+
+* `map_subtitle`: the subtitle to be displayed in the map. Please avoid long subtitles as in the mobile version of the dashboard they could not look good.
+
+* `map_source`: the original source for the data to be displayed and which will be cited below the map. This field needs to be written in `HTML` (for further instructions please see the `timeline_source` field description above). 
+
+* `map_legend_title`: the title to be displayed in the legend of the map. Please avoid long legend titles as they could not look good in the dashboard. This field is not mandatory, as the title for the legend in the map can be kept empty in the dashboard-structure file. The absence of title for the legend in the map is suggested in case the `dropdown` secondary menu structure type for the dashboard is chosen, as the lack of title allows to overcome an issue in the map legend, which stretches depending on the length of the text when this structure for the secondary menu type is chosen.   
+
+* `table`: this is a text field (not boolean), that must contain `TRUE` if
+you want to show the data in tabular format, and `FALSE` or keep empty in case not. If the table is for data from `data.csv` file, it is necessary to fill in also `table_ind` and `table_source`. If the table is for data form `forecasts.xlsx` it is necessary to fill in `table_xlsx_sheet_name` (see more information below).
+
+* `table_ind`: in this field you have to indicate the unique identifier for the data to be displayed in the table. In case the data to be displayed as table is contained in the `data.csv` file, this unique identifier can be found in the `IND` column. In this way, you are specifying from where to extract the information for building the table. 
+
+For displaying data in the Sheet1 of the `forecasts.xlsx` file as table format, in the `table_ind` field you will also indicate from where to extract the data for building the table. As we fully described above, there are two forecast data formats, and the sheets for building them have different structure. For the first Sheet1, as more than one indicator may be included (specified in columns), we need to indicate which of the available indicators in the Sheet1 will be used to create the table. For this aim we must fill the field with the heading for the indicator of interest in the Sheet1 of the `forecasts.xlsx` file. 
+For the second type of forecast data (data in Sheet2 and Sheet3, which differed in structure compared to Sheet1), all the data contained in the sheet are visualised in the same table, thus there is no need to specify anything in the `table_ind` field thus we can keep it empty. In this particular case (data to be displayed as tables and contained in Sheet 2 and 3 of the `forecasts.xlsx` file), the specific sheet where the data to build the table will be extracted from, will be specified in the next field of the `dashboard_structure.xlsx` file (`table_xlsx_sheet_name` field, see below).
+
+* `table_xlsx_sheet_name`: for data to be displayed as tables and stored in the `data.csv` file, this field must be kept empty. In case that data stored in the `forecasts.xlsx` file is going to be displayed as table, you must indicate here the name of the sheet in the `forecasts.xlsx` file containing the data to be displayed in the table (Sheet1, Sheet2 or Sheet3).
+
+* `table_column_names`: for tables containing data stored in the `data.csv` file, this field allows to label the column in the table devoted to the specific group (e.g., type of geopolitical entity, gender class, indicator component, etc.) using only one string of characters. For example, if data on European countries is displayed in the table, then the dashboard manager can fill this field with "Country". Apart from this column, which is displayed in the centre of the resulting table in the dashboard, and for which the dashboard manager can specify the label to be displayed, tables generated from data stored in the `data.csv` file present two more columns. These columns are named by default, and their labels cannot be modified by the dashboard manager. Specifically, these columns are: a first column named `Date`, which contains the date when the data was recorded stored in the `data.csv` file, and a third column named `Observed value`, containing the data stored in the `data.csv` file to be displayed.
+
+If the data to be displayed in the table is taken from the `forecasts.xlsx` file, then it is possible to rename all the columns for the indicators in the file. In case a lower number of labels compared to the number of data columns in the `forecasts.xlsx` file is provided, the labels provided by the dashboard manager will be added to the first N data columns in the table and the labels for all other columns will remain as they were initially displayed in the `forecasts.xlsx` file. The labels for different columns must be separated by "," but ensuring no blank space is added between labels as in the following example: `Entity,Period,Year,Value`.
+
+* `table_source`: the original source for the data to be displayed and which will be cited  below the table. This field needs to be written in `HTML` (for further instructions please see the `timeline_source` field description above). Please note that this field is mandatory and must be filled for the right generation of the final dashboard.
+
+Except for the columns indicating the point_linechart display mode, which was originally designed to be an exclusive display mode of the Eurostatistics scenario, all other columns in the `dashboard-structure.xlsx` file cannot be remove, even if all the fields in the column are empty (for example in the case of a display mode that you do not want
+to include in your dashboard, as a map in the case of data at the national level).
+
+As for the other data files, please be very careful when updating the `dashboard-structure.xlsx` file and ensure you are keeping the right data format. After finishing a new update, we suggest you to compare your resulting file with the sample files available in the package to check whether they exactly follow the same format and structure.
+
+### The dim-labels.csv file
+
+The unique identifiers in the `DIM` column of the `data.csv` file are usually not informative for the general public to understand the data series they refer. For this reason, they cannot be directly used for labelling the data series in the different display modes. The `dim-labels.csv` file links these codes representing the different levels of the indicator's group -e.g., geopolitical entities, gender classes, indicator components, others- coded in the `data.csv` file with the labels that will be displayed for each group in the final dashboard. In fact, in the timeline plot legend and comp_barchart x-axis labels, we can notice that even if we are using the value in the `DIM` column of the data file, which is a code, what we are showing is a label. For example, according to the `dim-label.csv` sample data, for the `EU` code in the `DIM` column, we can see that the label displayed in the final dashboard will be `European Union`. As a general rule, for all the different codes appearing in the `DIM` column of the data file, you will need to add an appropriate label in the `dim-labels.csv` file. This file contains three columns:
+
+* `code`: the code for the particular group level contained in the `DIM` column of the data file that we aim to assign the label. This has to necessarily be one of the codes appearing in the `DIM` column of the data file.
+
+* `label`: the label to be displayed for each specific level of the group (i.e., for each code). These labels are used in the text describing the time series in the timeline plot legend. These labels are also used in the comp_barchart x-axis for the corresponding group level. Please avoid long labels because they could not look good in the dashboard, particularly in the mobile version.
+
+* `group`: order to display the levels of the group in the legend of the timeline plots and in the comp_barchart plot x-axis. We can notice that in the timeline plots legend and in the comp_barchart plot x-axis of the Eurostatistics demonstration dashboard there is some space between group levels. Only the first levels of the group are shown by default. For being part of the visualisation, the other group levels need to be manually selected. This is the utility of this column that it is not required anymore although it was present in the original Eurostatistics tool. In fact, in the `dim-labels-italy.csv` file for the NSI demonstration dashboard this column is missing, as it is not being used for the groups.
+
+As for other data files, please ensure you exactly follow the same data format and structure when updating the file:
+
+"code","label","group""
+
+"EU","European Union",1
+
+"EA","Euro area",1
+
+"AT","Austria",2
+
+"BE","Belgium",2
+
+As we have described, the order for the levels of the group in the legend and x-axis is defined by the `group` column. Then, the elements which share the same code in the `group` column are displayed in the same order as they are in the `dim-labels.csv` file. For example, group `2` in the `dim-labels.csv` file is the second to be displayed, and then the order of the elements inside of this second group follow the order established in the file: `Austria`, `Belgium`, etc.
+
+### Putting all together
+
+Now that you have learnt everything about the display modes and the files, you are almost ready to prepare your own data files containing your own indicators and the most suitable display modes according to your data and needs.
+
+We strongly recommend keeping all the required files opened together and update them
+at the same time. You probably will need some time for training but once you fully understand the way it works and get familiar with all the information provided in this vignette, creating your own dashboards will be an easy task using this tool.
+
+Remember that the `double scale` plots are built from three different data series: indicator, trend and cycle, which can be also specified using the `IND` column. For the previous use cases, we need to respect some rules when deciding the code for these data series. Particularly in the case of the double scale plots, although they need to include several data series for building the plot, the `double_scale_ind` column of the `dashboard_structure.xlsx` file only allows for one indicator code. So, how can the program identify the specific codes for the different data series? 
+
+We can take the double scale plot for the `Gross Domestic Product (GDP)` in the Eurostatistics demonstration dashboard as an example, where the GDP in the Euro
+Area (and below in the EU) is shown together with its trend and cycle (derived from three different filters for their estimation).
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/double-scale.png')
+```
+
+For this element, in the `double_scale_ind` column of the `dashboard_structure.xlsx`, the code `GDP` is indicated. So, how the tool is understanding which are all the data series to be displayed?
+
+As a general rule, the code in the `IND` column of the data file for the data series
+used for the double scale plots needs to follow this structure:
+
+`TCD_indicator_suffix`
+
+Where the `TCD` (Trend and Cycle Data) is fixed, as well as the two separators `_` and the indicator is the only code that we should edit. This indicator code must be the same as the code in the `double_scale_ind` column of the `dashboard_structure.xlsx` file for this indicator. The suffix is defining the specific data series. We will learn how to use this suffix by using an example.
+
+Let's work with the GDP indicator and therefore to use the `GDP` code as its unique identifier. So, we would write this code in the `double_scale_ind` column of the `dashboard_structure.xlsx` and then we can add it in the `TCD_indicator_suffix`, that will then become `TCD_GDP_suffix`. As we remember above, the double scale plot includes data series for the indicator itself, for its trend and for its cycle. Therefore the suffix for determining these different data series should be as follows: 
+
+`IND` is suffix representing the data series for the indicator. Therefore, the data assigned the code `TCD_GDP_IND` in the `IND` column of the data.csv file are the data series for the GDP indicator to be displayed in the GDP double scale plot.
+
+Regarding the trend and the cycle, we need first to define the filter that was used for their estimation: `HP` for the Hodrick-Prescott method; `CF` for the Christiano-Fitzgerald and `UN` for the Unobserved Components method. And then we can include the suffix for the trend (`TREND`) or the cycle (`CYCLE`). In this way, `TCD_GDP_HP_TREND` `TCD_GDP_HP_CYCLE` are the data series for the trend and for the cycle of the GDP estimated with the HP filter, whereas `TCD_GDP_CF_TREND` `TCD_GDP_CF_CYCLE` are the data series for the trend and cycle of the the GDP estimated with the CF filter and, finally, `TCD_GDP_UN_TREND` `TCD_GDP_UN_CYCLE` are the data series for the trend and cycle of the GDP estimated applying the Unobserved Components approach.
+
+Now you should really have all the knowledge for creating your own files. Take
+your time to read the vignettes again, and compare with attention what you see in
+the demonstration dashboards with what you read in the sample files. You can now edit the sample files and design your own display modes. And when your files are ready, let's move into the next chapter!
+
+### Generating a dashboard
+
+As we introduced in the `Demonstration-dashboards-showing-the-functionalities-of-the-tool` vignette, the main function to generate a new dashboard is:
+
+``` r
+generate_dashboard(output_path, pdf_reports)
+```
+where
+
+* `output_path` is the absolute path to the folder where the resulting html file will be saved. Remember that, by running this function, you will save the sample dashboard as an html file into the `output_path` folder. Apart from the html file, a new folder named `visualisation_files` will be also saved in your `output_path` folder. This new folder will contain additional resources required for the dashboard that ensure the resulting html file has a moderate size even if many visulatisation elements are included in the final dashboard. 
+
+* `pdf_reports` to indicate whether the final users of the dashboard are allowed or are not allowed to download the information from the dashboard as pdf reports. By default, `pdf_reports` is declared as `"FALSE"` (i.e., no pdf report is created and therefore no pdf report is available for downloading by the final user). In case the dashboard manager changes this parameter of the function into `"TRUE"`, then the pdf reports are created when generating the dashboard and a link below the descriptive texts in each tab (text box in the right side of the dashboard) is included, allowing the final user to download a specific report for each indicator. This report includes title, descriptive texts and all the visualisation modes indicated in the `dashboard-structure.xlsx` file, except for the tables in case they were included in the dashboard. Depending on the internet browser that the final user is using, the report will be directly downloaded after clicking on the link or, as it is the case of Google Chrome, the report will be open in the browser, where it can be then downloaded from.
+
+Prior to create the pdf reports, the dashboard manager will need to install additional packages and extensions in order to generate the graphs. These packages and extensions (see details below) are only required if the dashboard manager declares as `TRUE` the `pdf_reports` parameter: 
+
+`install.packages("webshot")`
+
+`webshot::install_phantomjs()`
+
+`install.packages('reticulate')`
+
+`reticulate::install_miniconda()`
+
+`reticulate::conda_install('r-reticulate', 'python-kaleido')`
+
+`reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')`
+
+`reticulate::use_miniconda('r-reticulate')`
+
+In case the dashboard manager has his/her `renv environment` configured, then he/she will have to install the packages `webshot` and `reticulate` as:
+
+``` r
+renv::install(c(
+     "webshot@0.5.5",
+     "reticulate@1.35.0"))
+```
+
+And then run: `renv::snapshot()`.
+
+Please, keep in mind that enabling the pdf report functionality makes the generation of the new dashboard more time consuming, as all the possible report files for each indicator must be generated each time a new dashboard is created.
+
+### Uploading your own files as package data
+
+The first time the `generate_dashboard(output_path, pdf_reports)` function is run, the demonstration dashboards, `Eurostatistics` or `NSI` scenarios (for more information, see the `Demonstration-dashboards-showing-the-functionalities-of-the-tool` vignette), are generated based on the data samples available in the package.
+
+Once you have created your own files following the instructions and recommendations detailed above, you can pass them as parameters in the package functions. These functions will save these new files in the project default data folder in your device memory. From this very moment, the tool will read your own data for building the dashboard, instead of the sample ones.
+
+First of all, depending on which scenario is more suitable for your aims, you need to record this choice in the project memory as well by calling this function:
+
+``` r
+update_scenario(entity)
+```
+
+Where the parameter `entity` can be either `"eurostat"` or `"nsi"`, depending
+on your chosen scenario.
+
+The choice of the scenario will determine the general structure of the dashboard (the set of topics displayed in the primary main heading). Now this general structure is ready, we can fill it with the data and indicators of our interest.
+
+All other functions in the package work in the same way. They read your file from the
+`file_path` you pass as parameter and save it in the project default data folder
+in your device memory. The `file_path` is the absolute path to the file,
+including the file name. For example the path for the file `example.csv` in a
+root `example` folder is `"example/example.csv"`.
+
+The available functions for updating the files for building the dashboard are the following:
+
+* `update_data(file_path)`: for updating the `data.csv` file.
+
+* `update_forecasts(file_path)`: for updating the `forecasts.xlsx` file.
+
+* `update_dashboard_structure(file_path)`: for updating the
+`dashboard-structure.xlsx` file.
+
+* `update_dim_labels(file_path)`: for updating the `dim_labels.csv` file.
+
+* `update_secondary_menu(type)`: for updating the type of secondary menu to be displayed, Where the parameter `type` can be either `"storyboard"` or `"dropdown"`, depending on your preferences. 
+
+In contrast to the demonstration dashboards which have a `storyboard` structure for the secondary heading, below an example of `dropdown` structure:
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('img/dropdown-menu.png')
+```
+
+You can run any of these functions at any time for updating the corresponding file or setting. However, we strongly recommend updating all the files and settings at once, to avoid, among others, that the codes in the `IND` column of the data file might not correspond with the ones in the `_ind` columns of the dashboard structure file. In this case, the code would not work. For example, in case you changed the data file but not the dashboard structure file.
+
+After calling any of the `update_` functions, if you generate the dashboard again (using the `generate_dashboard` function that we have described above) the changes  included in the update will be displayed in a new `html` file. 
+
+A final important function to delete prior user package data and configuration is:
+
+``` r
+reset_to_default()
+```
+
+This function reset the package to its default files and settings (i.e., the sample data files and dashboard configuration displayed in the demonstration dashboards).
+
+## Changes in the time frame for the plots
+
+This function allows to change the starting time point to be displayed in the plot:
+
+``` r
+update_date_from(date)
+```
+
+where `date` is the starting date as “yyyy-mm-dd”.
+
+It is applicable (and meaningful) only for the following display modes: `timeline`, `point_linechart` and `double scale` plots. 
+
+For these display modes, by default, the time series are displayed from “2015-01-01”, unless the time series available in the `data.csv` file is shorter (i.e., starting later than January 2015), or the dashboard manager fills an alternative value in the `date` parameter of the function. 
+
+Shortening the time frame to be displayed in the plot may help to reduce the size of the final HTML file that is generated, which significantly impacts the loading time of the hosting website. 
+
+## The Overview section
+
+The overview section can be updated by running this specific function:
+
+```r
+update_overview(overview_text = NULL, latest_changes_summary = NULL,
+                valuebox1_value = NULL, valuebox1_text = NULL, valuebox1_icon = NULL,
+                valuebox2_value = NULL, valuebox2_text = NULL, valuebox2_icon = NULL,
+                valuebox3_value = NULL, valuebox3_text = NULL, valuebox3_icon = NULL)
+```
+
+The function contains 11 parameters. If we do not pass a parameter, it will mean that we do not want to show it and therefore the missing parameter will not be displayed in the resulting Overview section. Specifically, the parameters are the following:
+
+* `overview_text`: the first descriptive text appearing in the section. For the Eurostatistics demonstration dashboard:
+
+```r
+"_**Data and interpretation for short-term economic analysis**
+showing the evolution of the economic activity in the
+[European Union](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:European_Union_(EU))(EU),
+[Euro area](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Euro-area)(EA)
+and Member States. The tool complements a
+[monthly article](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Eurostatistics_-_data_for_short-term_economic_analysis)
+offering additional indicators and interactive graphs linked to
+source data. This monthly review gives a synthetic picture of the
+macroeconomic situation in the recent past. It is based on Principal
+European Economic Indicators (PEEIs), complemented by some business
+cycle indicators._"
+
+```
+
+Please have in mind that the texts have to be written in R Markdown language. Remember that guidelines on the syntax in R Markdown can be found at Chapter `3. Markdown` in the [R Markdown Cheat Sheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf).
+
+* `latest_changes_summary`: the second descriptive text appearing in the section.
+For the Eurostatistics demonstration dashboard:
+
+```r
+"Euro area inflation continues to decelerate, while economics
+sentiment picks up and retail trade increases. Industrial production
+declines."
+```
+
+This is also written in R Markdown language, although in this case we use plain text, without including any link, bold or italics.
+
+* `valuebox1_value`: the value to show in the first value box.
+For the Eurostatistics demonstration dashboard `"-0.1%"`.
+
+* `valuebox1_text`: the text to show in the first value box, in R Markdown.
+For the Eurostatistics dashboard `"**GDP** (Euro Area, 3^rd^ quarter 2023)"`.
+
+* `valuebox1_icon`: to indicate the icon to be displayed within the first value box. This parameter must contain the reference of the icon to be displayed from [Font Awesome](https://fontawesome.com/icons/) (for example in the Eurostatistics demonstration dashboard the references for the icons with the arrows are: "fa-down-long" and "fa-up-long").
+
+* All other value boxes(`valuebox2_value`, `valuebox2_text`, `valuebox2_icon`, `valuebox3_value`, `valuebox3_text`, `valuebox3_icon`) works in the same way. In case an arrow is added, indicating whether the value in the box is increasing or decreasing, the sign of the value included in the value box will automatically determine if the arrowhead is pointing up or down, thus you do not need to modify this manually.
+
+## The title
+
+The title is the first text in the upper left corner. For the Eurostatistics demonstration dashboard, `"Eurostatistics 12/2023"`. You can update this text by calling the function:
+
+``` r
+update_title(title)
+```
+
+Where the `title` parameter is the updated version of the text.
+
+## The meta description
+
+Meta titles (title tags) and descriptions (meta descriptions) are HTML elements that provide concise summaries of webpage content to search engines and users. A well-optimized meta title and description can significantly impact a webpage's ranking, visibility, and click-through rates, ultimately driving sustainable organic traffic growth and achieving long-term SEO success.  
+
+The function below allows updating the meta description for the dashboard:
+
+``` r
+update_meta_description(description)
+```
+Where the `description` parameter is the updated version of the meta description tag.
+
+Creating effective HTML meta titles and descriptions is crucial for enhancing website visibility and attracting organic traffic. These elements play a crucial role in determining a webpage's ranking on search engine result pages (SERPs) and influencing user click-through rates (CTRs). 
+
+We offer the following guidance in terms of best practices for writing HTML meta descriptions to optimize the Search Engine Optimization (SEO) performance:
+
+Write compelling meta descriptions that provide concise yet informative summaries of webpage content.
+
+Aim for a meta description length of around 150-160 characters to ensure optimal visibility on SERPs.
+
+Incorporate relevant keywords naturally within the meta description to improve search engine relevance and attract user attention.
+
+Highlight unique selling points, benefits, or calls-to-action within the meta description to entice users to click through to the webpage.
+
+Ensure consistency between the meta description and webpage content to provide a cohesive user experience.
+
+Tailor meta descriptions to accurately represent the content of the webpage, avoiding misleading or irrelevant information.
+
+Regularly review and update meta descriptions to reflect changes in webpage content, keyword targeting, or search engine algorithms.
+
+As a showcase, the demonstration dashboards contain the following meta descriptions:
+
+**Eurostatistics**: 
+
+Data visualization and interpretation for short-term economic analysis showing the evolution of the economic activity in the European Union (EU), euro area (EA) and/or Member States.
+
+**NSI**: 
+
+Data visualization and interpretation for short-term economic analysis showing the evolution of the economic activity in Italy.
+
+## The edition
+
+The edition is the second text in the upper left corner. For the Eurostatistics demonstration dashboard, `"Edition: December 2023. Next update: 26 January 2024"`. You can update this text by calling the function:
+
+``` r
+update_edition(edition)
+```
+
+Where the `edition` parameter is the updated version of the text.
+
+## The logo
+
+You can also customise the logo image, as well as the link associated to this image. The position of the logo can also be updated. All these changes can be done by running this function:
+
+``` r
+update_logo(file_path = NULL, position = NULL, link = NULL)
+```
+
+Where all the parameters are nullable. Therefore, as we commented above, if a parameter is not passed, we will keep showing the sample one (or the last information included, in case any update was made). Regarding the parameters of the function:
+
+* `file_path` is the absolute path to the image you want to include as logo. If needed, the image will be automatically reduced to ensure it fits its dedicated room in the dashboard, but keeping its original size proportions.
+
+* `position` is the logo position, to choose between `"right"` (as in the Eurostatistics demonstration dashboard) and `"left"` (as the NSI demonstration dashboard). It is important to highlight that although the right position is allowed, the left position is the standard one. As the logo on the right is a forced position it could generate some bugs in some screen size ranges, depending on the length of the elements (i.e., title, edition) that you aim to include. For this reason, we recommend to place the logo in the left side.
+
+* `link` is the url for the web page to redirect the user to, when clicking on the
+logo.
+
+## Header buttons
+
+For header buttons we refer to the buttons appearing in the lower right side of the header (below the logo in case you chose the right position for it). As we can see in the Eurostatistics demonstration dashboard, we can include one button with a link to an external source of related information and another one to share the dashboard in the social media.
+
+All this information can be updated by calling the function:
+
+``` r
+update_social(article_text = NULL, article_link = NULL,
+              facebook_link = NULL, twitter_link = NULL, linkedin_link = NULL)
+```
+
+The parameters are also nullable, but this time if we do not pass a parameter, it will mean that we do not want to show it, as in the NSI demonstration dashboard, where the
+share with social media button is not included.
+
+* `article_text` is the text to show in the external link button, for the Eurostatistics demonstration dashboard `Read the article`.
+
+* `article_link` is the url to redirect the user to (external link) when
+clicking on the button.
+
+* `facebook_link`, `twitter_link` and `linkedin_link` are the links for sharing
+the page in the respective social media. The links can be easily
+created with the application https://www.sharelinkgenerator.com/.
+
+## Footer
+
+For footer we refer to the lower part of the dashboard. This information can be included (see for instance the Eurostatistics demonstration dashboard), or not, as in the NSI demonstration dashboard.
+
+We can update the footer information by calling the function:
+
+``` r
+update_footer(last_update = NULL, cookies_policy_link = NULL,
+              privacy_policy_link = NULL, legal_notice_link = NULL,
+              feedback_email = NULL, feedback_email_subject = NULL
+```
+
+Once again, the parameters are nullable. When we do not pass a parameter, it
+means that it will not be shown, as in the NSI demonstration dashboard where no footer is displayed.
+
+* `last_update` is the text in the left side. For the Eurostatistics demonstration dashboard `Data extracted: 7 December 2023`.
+
+* `cookies_policy_link` is the url to the page containing the cookies policy.
+The one redirecting the user to, when clicking on the `Cookies policy` button.
+
+* `privacy_policy_link` is the url to the page containing the privacy policy.
+The one redirecting the user to, when clicking on the `Privacy policy` button.
+
+* `legal_notice_link` is the url to the page containing the legal notice.
+The one redirecting the user to, when clicking on the `Legal notice` button.
+
+* `feedback_email` is the email address you want to be receiving the feedback
+emails, when clicking on the `Feedback` button on the right side.
+
+* `feedback_email_subject` is the predetermined subject for the feedback emails.
+
+## Dashboard colours
+
+You can change the general aspect of the dashboard updating the colours used
+for many of the elements. For this aim, the function to be used is:
+
+``` r
+update_dashboard_colors(
+    primary_background_color = "#004494", # EC Blue
+    primary_color = "white",
+    secondary_background_color = "#FFD617", # EC Yellow
+    secondary_color = "black",
+    navbar_border_color = "#002F67", # EC Blue 130
+    storyboard_background_color = "#BFD0E4", # EC Blue 25
+    storyboard_color = "black",
+    storyboard_border_color = "#FBC11D", # EC Yellow 110
+    on_hover_storyboard_background_color = "#7FA1C9", # EC Blue 50
+    on_hover_storyboard_color = "white",
+    overview_text_background_color = "white",
+    overview_text_color = "black",
+    latest_changes_summary_background_color = "#404040", # EC Grey
+    latest_changes_summary_color = "white",
+    valuebox1_background_color = "#006FB4", # EC Blue N
+    valuebox1_color = "white",
+    valuebox2_background_color = "#F29527", # EC Orange
+    valuebox2_color = "black",
+    valuebox3_background_color = "#467A39", # EC Green
+    valuebox3_color = "white",
+    description_background_color = "#EBEBEB", # EC Grey 10
+    description_color = "black",
+    mobile_chart_title_background_color = "#F2F5F9", # EC Blue 5
+    mobile_chart_title_color = "#004494" # EC Blue
+    )
+```
+
+The default parameters values for this fuction are the colours in the Eurostatistics demonstration dashboard. This means that if we do not pass one or more parameters, the default values will be used, i.e. the Eurostatistics colours.
+
+* `primary_background_color` and `primary_color` are the background and text
+colours for the navbar. In the Eurostatistics demonstration dashboard, deep blue and white.
+
+* `secondary_background_color` and `secondary_color` are the background and text
+colours when hovering or selecting an item from the main menu. For the Eurostatistics demonstration dashboard, yellow and black.
+
+* `navbar_border_color` is the border colour for the navbar. For Eurostatistics dashboard, deep blue.
+
+* `storyboard_background_color`, `storyboard_color` and `storyboard_border_color` are the background, text, and border colours for the unhovered items of the storyboard menu. For Eurostatistics, light blue, black and yellow.
+
+* `on_hover_storyboard_background_color` and `on_hover_storyboard_color` are the
+background and text colours when hovering items from the storyboard menu. For
+Eurostatistics, blue and white.
+
+* `overview_text_background_color` and `overview_text_color` are the background
+and text colour for the overview text (first box appearing in the overview
+section). For Eurostatistics, white and black.
+
+* `latest_changes_summary_background_color` and `latest_changes_summary_color`
+are the background and text colour for the latest changes summary text (second
+box appearing in the overview section). For Eurostatistics, grey and white.
+
+* `valuebox1_background_color` and `valuebox1_text_color` are the background
+and text colours for the first value box in the overview section. Same for the
+second and third value boxes with `valuebox2_background_color`,
+`valuebox2_text_color`, `valuebox3_background_color` and `valuebox3_text_color`, respectively.
+
+* `description_background_color` and `description_color` are, respectively, the background and text colours for the description box in the right side. For Eurostatistics, grey and black.
+
+* `mobile_chart_title_background_color` and `mobile_chart_title_color` are the
+background and text colours for the secondary menu items in the mobile version,
+when the storyboard is disabled.
+
+## Graphs colours
+
+You can customise the colour palettes used for the plots as well. Two different
+colour palettes are used: one for the comp_barchart plots and an additional one
+for all other plots. You can update both palettes by calling the function:
+
+``` r
+update_colors_palette(colors_palette = NULL,
+                      bar_chart_colors_palette = NULL)
+```
+
+Where the `colors_palette` parameter is for the colour palette used for all the
+plots except for the comp_barchart, and the `bar_chart_colors_palette` is the colour palette for the comp_barchart plots.
+
+Both parameters are nullable, since you can decide to customise just one palette and keep the other as default, when you are passing only one parameter to this function.
+
+The palettes are passed as lists of colours, for example in the Eurostatistics demonstration dashboard `colors_palette` is:
+
+``` r
+c('#004494', '#FFD617', '#E04040', '#00525C', '#782A78', '#866110',
+  '#9CC1FA', '#3A1380', '#DB76A5', '#17256B', '#80BFFA', '#B656BD',
+  '#208486', '#104F99', '#A77DF9', '#6DB56D', '#33A033', '#982630',
+  '#007243', '#F5AFCC', '#CAADF9', '#388AE2', '#672DC4', '#C19062',
+  '#D38DD9', '#AF155C', '#734921', '#AA5F18', '#C6AF5D', '#5FADAD',
+  '#738CE5', '#FF8080', '#DFB18B', '#92C1C0', '#FFA3A3', '#E2B3DD')
+```
+
+The length of the list needs to be at least equal (but could be longer) than the number of elements (data series) to be displayed in the plots. For example, in the Eurostatistics demonstration dashboard, for those plots including geopolitical entities (`DIM` column in the data file), the number of countries plus two extra colours for `EU` and `EA`.
+
+## Guide for Optimizing the HTML file size
+
+As we pointed out above, the size of the final `visualisation.html` file significantly impacts the loading time of the hosting website. Therefore, it is crucial not to exceed this size to ensure a fast and efficient website. The file size is primarily determined by the number of display modes, and the length and number of data series to be displayed in each plot. For instance, the `Eurostatistics` demonstration dashboard, which contains a number of visualization elements, long time series data, and multiple data series (i.e., geopolitical entities) to be displayed, results in a larger file size (16 MB) compared to the simpler NSI demonstration dashboard, which has 395 KB size.
+
+The website loading time also depends on the hosting service and the download speed in the users' devices, which can be categorized into low, medium, and fast ranges. For instance, downloading the `Eurostatistics` demonstration dashboard may take approximately 13s for low-speed users, 11s for medium-speed users, and 8s for fast-speed users, surpassing the recommended maximum time of 7s. While users from countries with robust network infrastructure may find this download time acceptable, those in regions with poor infrastructure may experience delays. In such cases, reducing the HTML file size, perhaps to a maximum of 8 MB, may enhance web performance.
+
+To reduce the HTML file size, please consider to follow the strategies below:
+
+1. Reduce the number of Display Modes: Limit the number of visualization elements to be displayed in the final dashboard.
+
+2. Narrow the Display Time Frame: Update the starting date of the time frame for the data to be displayed in the plots to shorten the time series to be visualised and therefore the amount of data to be displayed.
+
+3. Limit the Number of Groups: Avoid to display datasets containing a large number of groups (e.g., geopolitical entities, indicator components, etc.).
+
+By implementing these strategies, you can effectively reduce the HTML file size of your dashboard, ensuring optimal website performance and preventing slow loading times.
+
+## DONE!
+
+That's all you need to know about this powerful package. We hope that you enjoyed reading and the whole learning process.

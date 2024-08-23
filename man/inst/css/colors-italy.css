@@ -1,0 +1,26 @@
+:root {
+  --primary-background-color: #244c5a;
+  --primary-color: white;
+  --secondary-background-color: #d22630;
+  --secondary-color: white;
+  --navbar-border-color: #244c5a;
+  --storyboard-background-color: white;
+  --storyboard-color: #244c5a;
+  --storyboard-border-color: #d22630;
+  --on-hover-storyboard-background-color: #244c5a;
+  --on-hover-storyboard-color: white;
+  --overview-text-background-color: white;
+  --overview-text-color: #244c5a;
+  --latest-changes-summary-background-color: #577783;
+  --latest-changes-summary-color: white;
+  --valuebox1-background-color: #244c5a;
+  --valuebox1-color: white;
+  --valuebox2-background-color: #d22630;
+  --valuebox2-color: white;
+  --valuebox3-background-color: #577783;
+  --valuebox3-color: white;
+  --description-background-color: #f5f5f5;
+  --description-color: #244c5a;
+  --mobile-chart-title-background-color: #f5f5f5;
+  --mobile-chart-title-color: #244c5a;
+}

@@ -1,0 +1,11 @@
+---
+output: pdf_document
+---
+
+`r paste0("![](", filename, ")")`
+
+`r if (exists("filename3")) {paste0("![](", filename3, ")")}`
+
+`r if (exists("filename5")) {paste0("![](", filename5, ")")}`
+
+`r if (exists("filename7")) {paste0("![](", filename7, ")")}`
