@@ -51,18 +51,32 @@ Specifically, the eurostatRTool package can be installed from GitHub by
 running:
 
 ``` r
-# To install from a private repo, use auth_token with a token
-# from [https://github.com/settings/tokens](https://github.com/settings/tokens). You only need the
-# repo scope. Best practice is to save your PAT in env var called
-# GITHUB_PAT.
-devtools::install_github("Randbee/eurostatRTool",
-                         auth_token = "your-auth-token",
-                         dependencies = TRUE, build_vignettes = TRUE)
+devtools::install_github("eurostat/eurostatRTool")
 ```
 
 This should directly install the package from Github, without any other
 steps. You may be asked to update packages. This might not be strictly
-necessary, so you can try skipping this step.
+necessary, so you can try skipping this step. The following pacages are required (in brackets are the versions used to develop eurostatRTool
+``` r
+install.packages("configr", version= "0.3.5")
+install.packages("dplyr", version= "1.1.4")
+install.packages("DT", version= "0.32")
+install.packages("flexdashboard", version= "0.6.2")
+install.packages("htmltools", version= "0.5.8")
+install.packages("leaflet", version= "2.2.1")
+install.packages("lubridate", version= "1.9.3")
+install.packages("magick", version= "2.8.3")
+install.packages("magrittr", version= "2.0.3")
+install.packages("mapview", version= "2.11.2")
+install.packages("metathis", version= "1.1.4")
+install.packages("plotly", version= "4.10.3")
+install.packages("rmarkdown", version= "2.25")
+install.packages("shiny", version= "1.8.0")
+install.packages("shinydashboard", version= "0.7.2")
+install.packages("sp", version= "2.1-3")
+install.packages("tidyr", version= "1.3.0")
+install.packages("xlsx", version= "0.6.5")
+```
 
 ## Getting started
 
