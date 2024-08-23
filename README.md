@@ -143,6 +143,4 @@ readable format.
 ``` r
 utils::browseVignettes("eurostatRTool")
 ```
-
-
-
+If you have any further questions, please contact us at [ESTAT-EUROINDICATORS@ec.europa.eu](mailto:ESTAT-EUROINDICATORS@ec.europa.eu).
