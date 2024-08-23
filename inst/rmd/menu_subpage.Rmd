@@ -1,0 +1,34 @@
+`r paste0(menu_category, ' {.storyboard}')`
+===
+
+```{r render indicator, include=FALSE}
+# Create variable which stores all subpages outputs
+out = NULL
+
+# Set knitr options to allow duplicate labels (needed for the subpages)
+options(knitr.duplicate.label = 'allow')
+
+# Create temporary environment which we use for knitting indicator_subpages.RMD 
+indicator_subpage_env <- new.env()
+
+for (k in 1:max(menu_subpage_data$indicator_position)) {
+  # Filter indicator data for menu data
+  indicator_subpage_data <- menu_subpage_data %>% 
+    dplyr::filter(indicator_position == k)
+  
+  # Assign data, geo labels, color palettes and filtered subpage data to subpage_env
+  assign("data", data, indicator_subpage_env)
+  assign("geo_labels", geo_labels, indicator_subpage_env)
+  assign("colors_palette", colors_palette, indicator_subpage_env)
+  assign("bar_chart_colors_palette", bar_chart_colors_palette, indicator_subpage_env)
+  assign("indicator_subpage_data", indicator_subpage_data, indicator_subpage_env)
+  assign("menu_category_i", menu_category_i, indicator_subpage_env)
+  assign("pdf_reports", pdf_reports, indicator_subpage_env)
+  
+  # Knit indicator_subpage.RMD using the indicator_subpage_env and add result to out vector
+  out = c(out, knitr::knit_child('indicator_subpage.RMD', envir = indicator_subpage_env))
+  
+}
+```
+
+`r paste(knitr::knit_child(text = out), collapse = '')`

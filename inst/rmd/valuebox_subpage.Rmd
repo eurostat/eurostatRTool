@@ -1,0 +1,5 @@
+### `r paste0(valuebox_data$text, ' {#valuebox', valuebox_index, '}')`
+
+```{r}
+flexdashboard::valueBox(valuebox_data$value, icon = valuebox_data$icon)
+```

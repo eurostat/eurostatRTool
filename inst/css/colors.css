@@ -1,0 +1,26 @@
+:root {
+  --primary-background-color: #004494; /* EC Blue */
+  --primary-color: white;
+  --secondary-background-color: #FFD617; /* EC Yellow */
+  --secondary-color: black;
+  --navbar-border-color: #002F67; /* EC Blue 130 */
+  --storyboard-background-color: #BFD0E4; /* EC Blue 25 */
+  --storyboard-color: black;
+  --storyboard-border-color: #FBC11D; /* EC Yellow 110 */
+  --on-hover-storyboard-background-color: #7FA1C9; /* EC Blue 50 */
+  --on-hover-storyboard-color: white;
+  --overview-text-background-color: white;
+  --overview-text-color: black;
+  --latest-changes-summary-background-color: #404040; /* EC Grey */
+  --latest-changes-summary-color: white;
+  --valuebox1-background-color: #006FB4; /* EC Blue N */
+  --valuebox1-color: white;
+  --valuebox2-background-color: #F29527; /* EC Orange */
+  --valuebox2-color: black;
+  --valuebox3-background-color: #467A39; /* EC Green */
+  --valuebox3-color: white;
+  --description-background-color: #EBEBEB; /* EC Grey 10 */
+  --description-color: black;
+  --mobile-chart-title-background-color: #F2F5F9; /* EC Blue 5 */
+  --mobile-chart-title-color: #004494; /* EC Blue */
+}

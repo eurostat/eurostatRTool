@@ -1,0 +1,419 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
+
+
+/* GENERAL LAYOUT */
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: white;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  height: unset !important;
+}
+
+#mainFooterContainer{
+  display: flex;
+  justify-content: space-between !important;
+  font-size: 16px;
+  flex-direction: row !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  color: black;
+  margin-top: auto;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.main-svg {
+  overflow: visible !important;
+}
+
+.dashboard-page-wrapper {
+  width: 100%;
+}
+
+.chart-wrapper {
+  min-width: 70%;
+}
+
+.chart-shim {
+  position: relative !important;
+  padding: 0px 10px 10px 10px !important;
+  overflow: auto;
+  margin: 0 5px;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+.chart-stage {
+  padding: 0 !important;
+}
+
+.tab-content {
+  max-width: 99%;
+  padding-top: 10px;
+}
+
+.tab-pane.active {
+  width: 100% !important;
+}
+
+.tab-pane.active:not(.dashboard-page-wrapper) {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#dashboard-container {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.tabset {
+  margin-left: 1% !important;
+}
+
+.footer {
+  font-size: 14px;
+  color: #262838;
+  margin-top: 7px;
+  margin-left: 3px;
+}
+
+a {
+  color: var(--primary-background-color);
+}
+
+
+/* OVERVIEW SECTION LAYOUT */
+
+#overview {
+  padding-left: 1.5%;
+  padding-right: 1.5%;
+}
+
+#overview > div {
+  display: flex;
+  flex-direction: row;
+  padding-left: 8px;
+}
+
+.overview-col {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1.5%;
+  padding-right: 1.5%;
+}
+
+#overview-text {
+  border-style: solid;
+  border-color: black;
+  background-color: var(--overview-text-background-color);
+  color: var(--overview-text-color);
+  margin: 10.5px 8px 10.5px 0px !important;
+  padding: 10.5px 10.5px 10.5px 10.5px !important;
+}
+
+#latest-changes-summary {
+  border-style: solid;
+  border-color: black;
+  background-color: var(--latest-changes-summary-background-color);
+  color: var(--latest-changes-summary-color);
+  font-size: 20px;
+  margin: 10.5px 8px 21px 0px !important;
+  padding: 10.5px 10.5px 10.5px 10.5px !important;
+}
+
+#valuebox1 {
+  background-color: var(--valuebox1-background-color);
+}
+
+#valuebox1 > .inner {
+  color: var(--valuebox1-color);
+}
+
+#valuebox2 {
+  background-color: var(--valuebox2-background-color);
+}
+
+#valuebox2 > .inner {
+  color: var(--valuebox2-color);
+}
+
+#valuebox3 {
+  background-color: var(--valuebox3-background-color);
+}
+
+#valuebox3 > .inner {
+  color: var(--valuebox3-color);
+}
+
+
+/* NAVBAR LAYOUT */
+
+.nav-tabs-custom > .nav-tabs > li.active {
+  border-top-color: var(--primary-background-color);
+}
+
+.navbar-brand {
+  margin-left: 0px !important;
+}
+
+.fa-share-alt, .fa-newspaper {
+  font-size: 18px;
+}
+
+.navbar, .navbar-brand {
+  background-color: var(--primary-background-color);
+  border-color: var(--navbar-border-color);
+  color: var(--primary-color);
+}
+
+.navbar-header, .navbar-brand {
+  font-size: 24px;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.navbar-nav li a:hover, .navbar-nav > .active > a {
+  background-color: var(--secondary-background-color) !important;
+  color: var(--secondary-color) !important;
+}
+
+.navbar {
+  margin: 0 !important;
+  width: 100%
+}
+
+.navbar-logo img {
+  margin-bottom: 7px;
+  margin-top: 3px;
+}
+
+.chart-wrapper, .nav-tabs-custom {
+  margin: 0 !important;
+}
+
+
+/* STORYBOARD LAYOUT */
+
+/* container frame for charts and text */
+.sbframe-content div {
+  background-color: white;
+  border: none;
+}
+
+.sbframe-commentary div {
+  background-color: var(--description-background-color);
+  color: var(--description-color);
+  padding: 5px 12px 10px 15px; /* padding-top less, -left/-right more */
+  border-radius: 1px;
+}
+
+/* non-active parts of storyboard nav bar */
+.storyboard-nav .sbframelist ul li {
+  background-color: var(--storyboard-background-color) !important;
+  color: var(--storyboard-color) !important;
+  font-size: 16px;
+  border: none;
+  border-radius: 1px;
+  height: 100px;
+}
+
+/* on hover of storyboard nav bar */
+.storyboard-nav .sbframelist ul li:hover {
+  background-color: var(--on-hover-storyboard-background-color) !important;
+  color: var(--on-hover-storyboard-color) !important;
+  border-radius: 1px;
+  border: none; /* 1px solid var(--EC_Blue_25) */
+}
+
+/* active parts of storyboard nav bar */
+.storyboard-nav .sbframelist ul li.active {
+  box-sizing: border-box;
+  background-color: var(--storyboard-background-color) !important;
+  color: var(--storyboard-color) !important;
+  border: 3px solid var(--storyboard-border-color);
+  border-radius: 1px;
+  padding: 7px !important;
+  font-weight: 600;
+}
+
+/* storyboard navigation buttons shorter height */
+.storyboard-nav .sbnext, .storyboard-nav .sbprev {
+  height: 100px;
+}
+
+.storyboard-nav .sbframelist {
+  height: 105px; /**/
+}
+
+.sbframe-commentary {
+  margin-left: 5px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-right: 15px !important;
+}
+
+.storyboard {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 1.5%;
+}
+
+.sbframe:not(.active) {
+  display: none !important;
+}
+
+
+/* MOBILE LAYOUT */
+
+.mobile-layout .chart-wrapper {
+  border: none !important;
+}
+
+.mobile-layout .chart-title {
+  border-bottom: none !important;
+  border-right: 2px solid white !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: var(--mobile-chart-title-color) !important;
+  background-color: var(--mobile-chart-title-background-color) !important;
+  padding: 10px 15px 10px 15px !important;
+  margin-top: 10px;
+}
+
+.mobile-layout .chart-stage > .level4 {
+  padding: 5px 15px 10px 15px !important;
+  margin-top: 10px;
+}
+
+.mobile-layout .tab-content {
+  padding-top: 0px !important;
+}
+
+
+/* MAPS LAYOUT */
+
+.map {
+  width: 100% !important;
+  height: 400px !important;
+}
+
+.map-table-title {
+  text-align: center;
+  font-family: "Open Sans", verdana, arial, sans-serif;
+  font-size: 17px;
+  fill: rgb(68, 68, 68);
+  opacity: 1;
+  font-weight: normal;
+  white-space: pre;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+
+/* TABLES LAYOUT */
+
+.table {
+  width: 100% !important;
+  height: 400px !important;
+  font-size: 14px;
+}
+
+.table-mobile {
+  width: 100% !important;
+  height: 500px !important;
+  font-size: 14px;
+}
+
+.dataTables_scrollHeadInner {
+  width: unset !important;
+}
+
+
+/* LAYOUT BASED ON SCREEN WIDTH */
+
+@media (max-width: 1050px) {
+  .navbar-left {
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .chart-stage {
+    padding: 0 !important;
+  }
+
+  .navbar-nav-left {
+    width: 100%;
+  }
+
+  .navbar-logo img {
+    position: relative !important;
+    right: 0;
+    left: 15px;
+  }
+
+  .tab-content {
+    margin-top: 0 !important;
+  }
+
+  .rangeslider-container { /* hide completely the rangesliders */
+    visibility: hidden;
+	}
+
+  .Half_Mobile { /* chart on half mobile screen */
+    width: 100%;
+    height:45% !important;
+  }
+
+  .Top_Desktop {
+    display: none !important;
+  }
+
+}
+
+@media (max-width: 1100px) {
+
+  .mainTab {
+    flex: unset !important;
+    height: unset !important;
+    display: grid !important;
+  }
+
+  .mainTab .sbframe-commentary {
+    width: 100% !important;
+    margin-top: 5px !important;
+  }
+
+  .storyboard {
+    padding-left: 0% !important;
+  }
+
+}
+
+/* LARGE SCREENS */
+
+@media (min-width: 769px) {
+
+/* Hide the traces from rangesliders. ATTENTION: only traces shown
+   on the primary y axis are hidden. To hide traces from the secondary
+   y axis, plot them against a secondary x axis, identical to the
+   primary x axis and then attach the slider to the primary xaxis only */
+
+  .rangeslider-container .plot .scatterlayer {
+    visibility: hidden;
+  }
+
+  .Top_Desktop { /* chart on half large screen */
+    width: 100%;
+  }
+
+  .Half_Mobile {
+    display: none !important;
+  }
+
+}

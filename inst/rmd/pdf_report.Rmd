@@ -1,0 +1,243 @@
+---
+output: pdf_document
+params:
+  data: data
+  geo_labels: geo_labels
+  dashboard_structure_indicator_data: dashboard_structure_indicator_data
+  colors_palette: colors_palette
+  bar_chart_colors_palette: bar_chart_colors_palette
+title: "`r params$dashboard_structure_indicator_data$title[1]`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+# Read the parameters
+data <- params$data
+geo_labels <- params$geo_labels
+dashboard_structure_indicator_data <- params$dashboard_structure_indicator_data
+colors_palette <- params$colors_palette
+bar_chart_colors_palette <- params$bar_chart_colors_palette
+
+# latex has only three header levels, so I have to manually change from level 4 to 3
+description <- gsub("####", "###", dashboard_structure_indicator_data$description[1])
+```
+
+
+`r description`
+
+
+`r if (dashboard_structure_indicator_data$timeline[1]) {"## Time series"}`
+
+```{r render plots, include=FALSE, eval=dashboard_structure_indicator_data$timeline[1]}
+# Create variable which stores all subpages outputs
+plots_out = NULL
+  
+# Set knitr options to allow duplicate labels (needed for the subpages)
+options(knitr.duplicate.label = 'allow')
+  
+# Create temporary environment which we use for knitting plot.RMD 
+plots_subpage_env <- new.env()
+for(i in 1:nrow(dashboard_structure_indicator_data)) {
+  # Generate the plot and save it as .png file to include it in the report
+  timeline_fig <- generate_chart("timeline", data, geo_labels, colors_palette,
+                                 dashboard_structure_indicator_data[i,]$timeline_ind, NULL,
+                                 dashboard_structure_indicator_data[i,]$graph_title,
+                                 dashboard_structure_indicator_data[i,]$timeline_subtitle,
+                                 ".1f", TRUE)
+  filename <- paste0("timeline_temp_", i, ".png")
+  plotly::save_image(timeline_fig$fig, filename)
+    
+  # Assign plot to plots_subpage_env
+  assign("filename", filename, plots_subpage_env)
+    
+  # Knit plot.RMD using the plots_subpage_env and add result to out vector
+  plots_out = c(plots_out, knitr::knit_child('plot.RMD', envir = plots_subpage_env))
+}
+```
+
+`r if (dashboard_structure_indicator_data$timeline[1]) {paste(knitr::knit_child(text = plots_out), collapse = '')}`
+
+
+`r if (dashboard_structure_indicator_data$comp_barchart[1]) {"## Cross comparisons"}`
+
+```{r render plots, include=FALSE, eval=dashboard_structure_indicator_data$comp_barchart[1]}
+# Create variable which stores all subpages outputs
+plots_out = NULL
+  
+# Set knitr options to allow duplicate labels (needed for the subpages)
+options(knitr.duplicate.label = 'allow')
+  
+# Create temporary environment which we use for knitting plot.RMD 
+plots_subpage_env <- new.env()
+for(i in 1:nrow(dashboard_structure_indicator_data)) {
+  # Generate the plot and save it as .png file to include it in the report
+  bar_fig <- generate_chart("cross_country", data, geo_labels, bar_chart_colors_palette,
+                            dashboard_structure_indicator_data[i,]$comp_barchart_ind, NULL,
+                            dashboard_structure_indicator_data[i,]$graph_title,
+                            dashboard_structure_indicator_data[i,]$comp_barchart_subtitle,
+                            ".1f")
+  filename <- paste0("bar_temp_", i, ".png")
+  plotly::save_image(bar_fig$fig, filename)
+    
+  # Assign plot to plots_subpage_env
+  assign("filename", filename, plots_subpage_env)
+    
+  # Knit plot.RMD using the plots_subpage_env and add result to out vector
+  plots_out = c(plots_out, knitr::knit_child('plot.RMD', envir = plots_subpage_env))
+}
+```
+
+`r if (dashboard_structure_indicator_data$comp_barchart[1]) {paste(knitr::knit_child(text = plots_out), collapse = '')}`
+
+
+`r if (dashboard_structure_indicator_data$point_linechart[1]) {"## Point line chart plot"}`
+
+```{r render plots, include=FALSE, eval=dashboard_structure_indicator_data$point_linechart[1]}
+# Create variable which stores all subpages outputs
+plots_out = NULL
+  
+# Set knitr options to allow duplicate labels (needed for the subpages)
+options(knitr.duplicate.label = 'allow')
+  
+# Create temporary environment which we use for knitting plot.RMD 
+plots_subpage_env <- new.env()
+for(i in 1:nrow(dashboard_structure_indicator_data)) {
+  # Generate the plot and save it as .png file to include it in the report
+  ecoin_fig <- generate_chart("ecoin", data,
+                              dashboard_structure_indicator_data[i,]$point_linechart_dim,
+                              colors_palette,
+                              dashboard_structure_indicator_data[i,]$point_linechart_ind_point_linechart,
+                              dashboard_structure_indicator_data[i,]$point_linechart_ind_gdp,
+                              dashboard_structure_indicator_data[i,]$graph_title,
+                              dashboard_structure_indicator_data[i,]$point_linechart_subtitle,
+                              "", TRUE)
+  filename <- paste0("ecoin_temp_", i, ".png")
+  plotly::save_image(ecoin_fig$fig, filename)
+    
+  # Assign plot to plots_subpage_env
+  assign("filename", filename, plots_subpage_env)
+    
+  # Knit plot.RMD using the plots_subpage_env and add result to out vector
+  plots_out = c(plots_out, knitr::knit_child('plot.RMD', envir = plots_subpage_env))
+}
+```
+
+`r if (dashboard_structure_indicator_data$point_linechart[1]) {paste(knitr::knit_child(text = plots_out), collapse = '')}`
+
+
+`r if (dashboard_structure_indicator_data$double_scale[1]) {"## Trend and cycle decomposition"}`
+
+```{r render plots, include=FALSE, eval=dashboard_structure_indicator_data$double_scale[1]}
+# Create variable which stores all subpages outputs
+plots_out = NULL
+  
+# Set knitr options to allow duplicate labels (needed for the subpages)
+options(knitr.duplicate.label = 'allow')
+  
+# Create temporary environment which we use for knitting plot.RMD 
+plots_subpage_env <- new.env()
+for(i in 1:nrow(dashboard_structure_indicator_data)) {
+  # Generate the plot and save it as .png file to include it in the report
+  double_scale_fig <- generate_chart("double_scale", data, geo_labels,
+                                     colors_palette,
+                                     dashboard_structure_indicator_data[i,]$double_scale_ind,
+                                     dashboard_structure_indicator_data[i,]$double_scale_dim,
+                                     dashboard_structure_indicator_data[i,]$graph_title,
+                                     dashboard_structure_indicator_data[i,]$double_scale_subtitle,
+                                     ".1f", TRUE)
+  filename <- paste0("double_scale_temp_", i, ".png")
+  plotly::save_image(double_scale_fig$fig, filename)
+    
+  # Assign plot to plots_subpage_env
+  assign("filename", filename, plots_subpage_env)
+    
+  # Knit plot.RMD using the plots_subpage_env and add result to out vector
+  plots_out = c(plots_out, knitr::knit_child('plot.RMD', envir = plots_subpage_env))
+}
+```
+
+`r if (dashboard_structure_indicator_data$double_scale[1]) {paste(knitr::knit_child(text = plots_out), collapse = '')}`
+
+
+`r if (dashboard_structure_indicator_data$forecast_chart[1]) {"## Forecasts"}`
+
+```{r render plots, include=FALSE, eval=dashboard_structure_indicator_data$forecast_chart[1]}
+# Create variable which stores all subpages outputs
+plots_out = NULL
+  
+# Set knitr options to allow duplicate labels (needed for the subpages)
+options(knitr.duplicate.label = 'allow')
+  
+# Create temporary environment which we use for knitting plot.RMD 
+plots_subpage_env <- new.env()
+for(i in 1:nrow(dashboard_structure_indicator_data)) {
+  if (!is.na(dashboard_structure_indicator_data[i,]$forecast_chart_ind)) {
+    # Generate the plot and save it as .png file to include it in the report
+    forecast_fig <- generate_chart("forecast", NULL, geo_labels, colors_palette,
+                                   dashboard_structure_indicator_data[i,]$forecast_chart_ind,
+                                   dashboard_structure_indicator_data[i,]$forecast_chart_xlsx_sheet_name,
+                                   dashboard_structure_indicator_data[i,]$graph_title, "", "")
+    filename <- paste0("forecast_temp_", i, ".png")
+    plotly::save_image(forecast_fig$fig, filename)
+    # Assign plot to plots_subpage_env
+    assign("filename", filename, plots_subpage_env)
+  }
+  else {
+    # Generate the plot and save it as .png file to include it in the report
+    forecast_fig <- generate_chart("forecast", NULL, geo_labels, colors_palette,
+                                   dashboard_structure_indicator_data[i,]$forecast_chart_ind,
+                                   dashboard_structure_indicator_data[i,]$forecast_chart_xlsx_sheet_name,
+                                   dashboard_structure_indicator_data[i,]$graph_title,
+                                   "", i, TRUE)
+    filename <- paste0("forecast_temp_", i, "_", 1, ".png")
+    # Assign plot to plots_subpage_env
+    assign("filename", filename, plots_subpage_env)
+    
+    for (j in seq(3, length(forecast_fig)*2, 2)) {
+      name <- paste0("forecast_temp_", i, "_", j, ".png")
+      assign(paste0("filename", j), name, plots_subpage_env)
+    }
+  }
+    
+  # Knit plot.RMD using the plots_subpage_env and add result to out vector
+  plots_out = c(plots_out, knitr::knit_child('plot.RMD', envir = plots_subpage_env))
+}
+```
+
+`r if (dashboard_structure_indicator_data$forecast_chart[1]) {paste(knitr::knit_child(text = plots_out), collapse = '')}`
+
+
+`r if (dashboard_structure_indicator_data$map[1]) {"## Map"}`
+
+```{r render plots, include=FALSE, eval=dashboard_structure_indicator_data$map[1]}
+# Create variable which stores all subpages outputs
+plots_out = NULL
+  
+# Set knitr options to allow duplicate labels (needed for the subpages)
+options(knitr.duplicate.label = 'allow')
+  
+# Create temporary environment which we use for knitting plot.RMD 
+plots_subpage_env <- new.env()
+for(i in 1:nrow(dashboard_structure_indicator_data)) {
+  # Generate the plot and save it as .png file to include it in the report
+  filename <- paste0("map_temp_", i, ".png")
+  map <- generate_chart("map", data, geo_labels, NULL,
+                        dashboard_structure_indicator_data[i,]$map_ind,
+                        filename,
+                        dashboard_structure_indicator_data[i,]$graph_title,
+                        dashboard_structure_indicator_data[i,]$map_subtitle,
+                        dashboard_structure_indicator_data[i,]$map_legend_title,
+                        TRUE)
+    
+  # Assign plot to plots_subpage_env
+  assign("filename", filename, plots_subpage_env)
+    
+  # Knit plot.RMD using the plots_subpage_env and add result to out vector
+  plots_out = c(plots_out, knitr::knit_child('plot.RMD', envir = plots_subpage_env))
+}
+```
+
+`r if (dashboard_structure_indicator_data$map[1]) {paste(knitr::knit_child(text = plots_out), collapse = '')}`

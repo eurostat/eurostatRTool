@@ -1,0 +1,34 @@
+Package: eurostatRTool
+Title: Data Visualization and Interpretation for Short-Term Economic
+        Analysis
+Version: 0.0.0.9000
+Authors@R: 
+    person("Ludovica", "Verrieri", , "ludovica.verrieri@gmail.com",
+           role = c("aut", "cre"), comment = c(ORCID = "0009-0009-6343-5339"))
+Description: Data visualization and interpretation for short-term economic
+    analysis showing the evolution of the economic activity in the European
+    Union (EU), euro area (EA) and/or Member States. The users are allowed to
+    choose the time series data to be implemented (which must follow the
+    specified input data format), the particular set of indicators to be
+    displayed (in agreement with the input data), the visualization type (map,
+    plot or table) as well as the general aspect of the tool.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Suggests: knitr, testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: configr (>= 0.3.5), dplyr (>= 1.1.4), DT (>= 0.32),
+        flexdashboard (>= 0.6.2), htmltools (>= 0.5.8), leaflet (>=
+        2.2.1), lubridate (>= 1.9.3), magick (>= 2.8.3), magrittr (>=
+        2.0.3), mapview (>= 2.11.2), metathis (>= 1.1.4), plotly (>=
+        4.10.3), rmarkdown (>= 2.25), shiny (>= 1.8.0), shinydashboard
+        (>= 0.7.2), sp (>= 2.1.3), tidyr (>= 1.3.0), tools (>= 4.3.2),
+        utils (>= 4.3.2), xlsx (>= 0.6.5)
+Depends: R (>= 4.3)
+LazyData: true
+VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2024-07-09 19:33:57 UTC; ludo
+Author: Ludovica Verrieri [aut, cre] (<https://orcid.org/0009-0009-6343-5339>)
+Maintainer: Ludovica Verrieri <ludovica.verrieri@gmail.com>

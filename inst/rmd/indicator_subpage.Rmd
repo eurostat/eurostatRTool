@@ -1,0 +1,18 @@
+### `r indicator_subpage_data$title[1]` {data-commentary-width=300 .mainTab}
+
+```{r echo=FALSE}
+tab_boxes <- generate_tab_boxes(data, geo_labels, colors_palette,
+                                bar_chart_colors_palette, indicator_subpage_data,
+                                tabset_id = "tabset1")
+htmltools::tagList(# from htmltools
+  htmltools::div(tab_boxes$tab_box, class = "Top_Desktop"),
+  htmltools::div(tab_boxes$small_tab_box, class = "Half_Mobile")
+)
+```
+
+***
+
+`r indicator_subpage_data$description[1]`
+
+`r if (pdf_reports) {paste0("<a href='", file.path("visualisation_files", "reports", paste0(indicator_subpage_data$title[1],
+"_", menu_category_i, ".pdf")), "' download>Download the pdf report</a>")}`
