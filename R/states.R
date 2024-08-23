@@ -1,0 +1,22 @@
+#' States SpatialPolygonsDataFrame
+#'
+#' This is the states SpatialPolygonsDataFrame, included to draw the polygons
+#' for the states in the maps. It is obtained filtering the NUTS 0 (states)
+#' from the NUTS_RG_60M_2021_4326.geojson file, downloaded from
+#' https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts#nuts
+#' (year 2021, scale 60m, EPSG: 4326).
+#'
+#' Generation process:
+#'
+#' install.packages("geojsonio")
+#'
+#' library(geojsonio)
+#'
+#' geojson <- geojsonio::geojson_read("extdata/NUTS_RG_60M_2021_4326.geojson", what = "sp")
+#'
+#' states <- geojson\[geojson$LEVL_CODE == 0,\]
+#'
+#' use_data(states)
+#'
+#' @source extdata/NUTS_RG_60M_2021_4326.geojson
+"states"
