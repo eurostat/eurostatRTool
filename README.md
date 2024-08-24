@@ -79,7 +79,7 @@ install.packages("sp", version= "2.1-3")
 install.packages("tidyr", version= "1.3.0")
 install.packages("xlsx", version= "0.6.5")
 ```
-The setup of a renv environment provide a robust and reliable way to
+The setup of a [renv environment](https://rstudio.github.io/renv) provide a robust and reliable way to
 manage dependencies, ensuring that the R project you will setup to use
 this R package is isolated. By creating a specific renv environment for
 this R package, you will be able to set its dependencies in the same
@@ -110,11 +110,5 @@ eurostatRTool::generate_dashboard("path/to/output/folder")
 For general help with the eurostatRTool, you should look into the [Wiki page for this project](https://github.com/eurostat/eurostatRTool/wiki) 
 or the package’s documentation, which is available by checking the individual
 function documentation (`?function_name`) and also via the vignettes. 
-After installing the package, by running the code below, you will be redirected to a page in your
-browser displaying the list of vignettes for the eurostatRtool package:
-
-``` r
-utils::browseVignettes("eurostatRTool")
-```
 
 If you have any further questions, please contact us at [ESTAT-EUROINDICATORS@ec.europa.eu](mailto:ESTAT-EUROINDICATORS@ec.europa.eu).
