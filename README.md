@@ -55,7 +55,9 @@ devtools::install_github("eurostat/eurostatRTool")
 ```
 
 This should directly install the package from Github, without any other
-steps. You may be asked to update packages. This might not be strictly
+steps. 
+
+You may be asked to update packages. This might not be strictly
 necessary, so you can try skipping this step. The following packages are required (with versions used to develop eurostatRTool):
 ``` r
 install.packages("configr", version= "0.3.5")
@@ -92,12 +94,8 @@ mandatory. You can learn how to do it reading the corresponding vignette
 `Setup-a-renv-environment-for-managing-the-package-dependencies`.
 ## Getting started
 
-The eurostatRTool package requires a little reading and learning to be
-used properly. But once you have understood the way it works, you will
-find out that it is a very easy and flexible tool for visualising and
-sharing your data and their interpretation.
-
-Below we provide a basic example which shows you how to generate a
+The eurostatRTool package requires some learning to be
+used properly. Below we provide a basic example which shows you how to generate a
 general dashboard in a given output folder:
 
 ``` r
@@ -109,38 +107,14 @@ eurostatRTool::generate_dashboard("path/to/output/folder")
 
 ## Further help and documentation
 
-For general help with the eurostatRTool you should look into the
-package’s documentation, which is available by checking the individual
-function documentation (`?function_name`) and also via the vignettes.
-
-Following the guidelines contained in the vignettes you will learn how
-to build and maintain a customised dashboard for your organisation.
-
-These are the available vignettes for the eurostatRTool package:
-
-- Demonstration dashboards showing the functionalities of the tool
-  (`Demonstration-dashboards-showing-the-functionalities-of-the-tool`)
-- General workflow for building and maintaining a customised dashboard
-  for your organisation
-  (`General-workflow-for-building-and-maintaining-your-dashboard`)
-- Setup an renv environment for managing the package dependencies
-  (`Setup-a-renv-environment-for-managing-the-package-dependencies`)
-
-We recommend you to start from the
-`Demonstration-dashboards-showing-the-functionalities-of-the-tool`
-vignette, which allows you to generate two general sample dashboards,
-and then follow with the
-`General-workflow-for-building-and-maintaining-your-dashboard` vignette,
-where you will find guidance to build and maintain your own customised
-dashboard.
-
-By running the code below, you will be redirected to a page in your
-browser displaying the list of vignettes for the eurostatRtool package.
-From the list, you can choose the vignette you would like to read. We
-recommend using the `HTML` version of the vignettes, which is the more
-readable format.
+For general help with the eurostatRTool, you should look into the [Wiki page for this project](https://github.com/eurostat/eurostatRTool/wiki) 
+or the package’s documentation, which is available by checking the individual
+function documentation (`?function_name`) and also via the vignettes. 
+After installing the package, by running the code below, you will be redirected to a page in your
+browser displaying the list of vignettes for the eurostatRtool package:
 
 ``` r
 utils::browseVignettes("eurostatRTool")
 ```
+
 If you have any further questions, please contact us at [ESTAT-EUROINDICATORS@ec.europa.eu](mailto:ESTAT-EUROINDICATORS@ec.europa.eu).
