@@ -1,19 +1,17 @@
 
 # eurostatRTool
 
-The eurostatRTool is a Eurostat R package which provides a flexible
-visualisation and interpretation environment for economic indicators and
-their short-term analysis.
+The eurostatRTool is an R package developed by Eurostat, offering a robust and flexible environment 
+for the visualisation and analysis of economic indicators. With eurostatRTool, 
+users can create customisable HTML dashboards that display a wide range of indicators 
+through various visualisation types, including time series plots, bar charts, and maps. 
+The package enables users to effortlessly customise the overall layout, update underlying data, 
+and select specific visualisation modes and interpretative texts to feature in the dashboard. 
+This flexibility makes it easy to tailor the tool to specific needs, ensuring that the visualised data is both meaningful and accessible.
 
-eurostatRTool allows users to create customisable dashboards, as html
-files, for displaying user-defined indicators in multiple ways (time
-series plots, vertical bar plots for comparisons across groups, trend
-and cycle plots, horizontal bar plots, maps and tables) both for data
-inspection and interpretation.
-
-The users can easily customise the general layout, update the data used
-for building the indicators in the dashboard, as well as specify which
-displaying modes and interpretative texts are shown.
+A standout feature of eurostatRTool is the storyboard layout from Flexdashboard that organises information into a sequence of slides. 
+This layout allows users to present a step-by-step narrative, providing readers with a more comprehensive understanding of the data. 
+The user-friendly navigation enables viewers to move back and forth through the data story at their own pace, fostering a more interactive and engaging exploration.
 
 ## Installation
 
