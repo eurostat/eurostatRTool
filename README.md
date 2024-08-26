@@ -73,6 +73,6 @@ eurostatRTool::generate_dashboard("path/to/output/folder")
 ## Further help and documentation
 
 For general help with the eurostatRTool package, you should consult the [Wiki pages for this project](https://github.com/eurostat/eurostatRTool/wiki) 
-or reffer to the package’s documentation. After instalation you can access detailed information on individual functions by using `?function_name` and explore comrehensive guide thorough the vignette aby running `utils::browseVignettes("eurostatRTool")`.
+or reffer to the package’s documentation. After instalation you can access detailed information on individual functions by using `?function_name` and explore comrehensive guides through the vignettes by running `utils::browseVignettes("eurostatRTool")`.
 
 If you have any further questions, please send them to [ESTAT-EUROINDICATORS@ec.europa.eu](mailto:ESTAT-EUROINDICATORS@ec.europa.eu).
