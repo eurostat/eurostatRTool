@@ -56,7 +56,7 @@ This should directly install the package from Github, without any other
 steps. 
 
 The following packages are required: `configr`,  `dplyr`,  `DT`, `flexdashboard`, `htmltools`, `leaflet`, `lubridate`, `magick`,
-`magrittr`, `mapview`,  `metathis`, `plotly`, `rmarkdown`, `shiny`, `shinydashboard`, `sp`, `tidyr` and `xlsx`.
+`magrittr`, `mapview`,  `metathis`, `plotly`, `rmarkdown`, `shiny`, `shinydashboard`, `sp`, `tidyr`, `utils` and `xlsx`.
 
 Setting up an `renv` environment for this project is recommended but not
 mandatory. For more information, you should consult the [Wiki page for this project](https://github.com/eurostat/eurostatRTool/wiki). 
