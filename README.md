@@ -15,10 +15,6 @@ The user-friendly navigation enables viewers to move back and forth through the 
 
 ## Installation
 
-Please note that the package has been only tested in R version 4.3 thus
-if you are using later versions of R we cannot ensure its right
-functioning.
-
 ### For Windows users: install Rtools
 
 For installing R packages from source on Windows, users also need to
