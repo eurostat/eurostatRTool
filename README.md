@@ -59,7 +59,7 @@ The following packages are required: `configr`,  `dplyr`,  `DT`, `flexdashboard`
 `magrittr`, `mapview`,  `metathis`, `plotly`, `rmarkdown`, `shiny`, `shinydashboard`, `sp`, `tidyr` and `xlsx`.
 
 Setting up an `renv` environment for this project is recommended but not
-mandatory. For more information, you should consult the [Wiki page for this project](https://github.com/eurostat/eurostatRTool/wiki) 
+mandatory. For more information, you should consult the [Wiki page for this project](https://github.com/eurostat/eurostatRTool/wiki). 
 
 ## Getting started
 
