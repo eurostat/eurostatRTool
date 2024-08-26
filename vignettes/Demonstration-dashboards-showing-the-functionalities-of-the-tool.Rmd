@@ -42,9 +42,15 @@ knitr::include_graphics('img/eurostatistics-dashboard-example.png')
 
 ### NSI demonstration dashboard
 
-The sample version of the NSI scenario is built on public national data from Italy collected from [ISTAT website](https://www.istat.it/) in January 2024. To generate this sample dashboard, first we will have to call the `update_scenario("nsi")` function, passing the text `nsi` as parameter, allowing us to switch into the NSI scenario. 
+The sample version of the NSI scenario is built on public national data from Italy collected from [ISTAT website](https://www.istat.it/) in January 2024. To generate this sample dashboard, first we will have to call the `update_scenario("nsi")` function, passing the text `nsi` as parameter, allowing us to switch into the NSI scenario.  Additionally, you have to call the fallowing functions:
+* `update_data("library_path/eurostatRTool/extdata/data-italy.csv")`
+* `update_forecasts("library_path/eurostatRTool/extdata/forecasts-italy.xlsx")`
+* `update_dim_labels("library_path/eurostatRTool/extdata/dim-labels-italy.csv")`
+* `update_dashboard_structure("library_path/eurostatRTool/extdata\\dashboard-structure-italy.xlsx")`
 
-Once we have switched the scenario, we can generate the new dashboard by calling the main function `generate_dashboard(output_path)`, where the `output_path` parameter is
+where `library_path` is your folder with R packages, which you can find using `.libPaths()`.
+
+We cant then  generate the new dashboard by calling the main function `generate_dashboard(output_path)`, where the `output_path` parameter is
 the absolute path to the folder where the resulting html file will be saved. As for the Eurostatistics demonstration dashboard above, this function will save the NSI demonstration dashboard as an html file into the `output_path` folder. Below a screenshot took from the resulting html.
 
 ```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
