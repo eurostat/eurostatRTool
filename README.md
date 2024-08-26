@@ -11,7 +11,7 @@ This flexibility makes it easy to tailor the tool to specific needs, ensuring th
 
 A standout feature of eurostatRTool is the storyboard layout from `Flexdashboard` that organises information into a sequence of slides. 
 This layout allows to present a step-by-step narrative, providing readers with a more comprehensive understanding of the data. 
-The user-friendly navigation enables viewers to move back and forth through the data story at their own pace, fostering a more interactive and engaging exploration.
+The user-friendly navigation enables viewers to move back and forth through the data story at their own pace, fostering a more interactive and engaging data exploration.
 
 ## Installation
 
