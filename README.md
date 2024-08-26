@@ -59,15 +59,7 @@ The following packages are required: `configr`,  `dplyr`,  `DT`, `flexdashboard`
 `magrittr`, `mapview`,  `metathis`, `plotly`, `rmarkdown`, `shiny`, `shinydashboard`, `sp`, `tidyr` and `xlsx`.
 
 Setting up an `renv` environment for this project is recommended but not
-mandatory. The setup of a [renv environment](https://rstudio.github.io/renv) provide a robust and reliable way to
-manage dependencies, ensuring that the R project you will setup to use
-this R package is isolated. By creating a specific `renv` environment for
-this R package, you will be able to set its dependencies in the same
-version used during the building and testing of the R package, to avoid
-errors due to package updating. The environment will be isolate from
-your other projects, allowing you to change the version of the
-dependencies in other projects without affecting the project you setup
-for using this R package and viceversa.
+mandatory. For more information, you should consult the [Wiki page for this project](https://github.com/eurostat/eurostatRTool/wiki) 
 
 ## Getting started
 
@@ -84,8 +76,7 @@ eurostatRTool::generate_dashboard("path/to/output/folder")
 
 ## Further help and documentation
 
-For general help with the eurostatRTool, you should look into the [Wiki page for this project](https://github.com/eurostat/eurostatRTool/wiki) 
-or the package’s documentation, which would be available (after instalation process) by checking the individual
-function documentation (`?function_name`) and also via the vignettes, using `utils::browseVignettes("eurostatRTool")`.
+For general help with the eurostatRTool package, you should consult the [Wiki page for this project](https://github.com/eurostat/eurostatRTool/wiki) 
+or reffer to the package’s documentation. After instalation you can access detailed information on individual functions by using `?function_name` and explore comrehensive guide thorough the vignette aby running `utils::browseVignettes("eurostatRTool")`.
 
 If you have any further questions, please send them to [ESTAT-EUROINDICATORS@ec.europa.eu](mailto:ESTAT-EUROINDICATORS@ec.europa.eu).
