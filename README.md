@@ -27,7 +27,7 @@ packages.
 
 1.  Download: go to the [Rtools download
     page](https://cran.r-project.org/bin/windows/Rtools/) and download
-    the appropriate version of Rtools.
+    the appropriate version of `Rtools`.
 
 2.  Install: run the downloaded installer and follow the installation
     instructions. Make sure to select the option to modify the system
@@ -58,10 +58,10 @@ steps.
 The following packages are required: `configr`,  `dplyr`,  `DT`, `flexdashboard`, `htmltools`, `leaflet`, `lubridate`, `magick`,
 `magrittr`, `mapview`,  `metathis`, `plotly`, `rmarkdown`, `shiny`, `shinydashboard`, `sp`, `tidyr` and `xlsx`.
 
-Setting up an renv environment for this project is recommended but not
+Setting up an `renv` environment for this project is recommended but not
 mandatory. The setup of a [renv environment](https://rstudio.github.io/renv) provide a robust and reliable way to
 manage dependencies, ensuring that the R project you will setup to use
-this R package is isolated. By creating a specific renv environment for
+this R package is isolated. By creating a specific `renv` environment for
 this R package, you will be able to set its dependencies in the same
 version used during the building and testing of the R package, to avoid
 errors due to package updating. The environment will be isolate from
@@ -88,4 +88,4 @@ For general help with the eurostatRTool, you should look into the [Wiki page for
 or the package’s documentation, which is available by checking the individual
 function documentation (`?function_name`) and also via the vignettes, using `utils::browseVignettes("eurostatRTool")`.
 
-If you have any further questions, please contact us at [ESTAT-EUROINDICATORS@ec.europa.eu](mailto:ESTAT-EUROINDICATORS@ec.europa.eu).
+If you have any further questions, please send them to [ESTAT-EUROINDICATORS@ec.europa.eu](mailto:ESTAT-EUROINDICATORS@ec.europa.eu).
