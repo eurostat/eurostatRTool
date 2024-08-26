@@ -25,6 +25,9 @@ This document is a complete guide on how to build and maintain your own customis
 
 We will start describing how to upload your own data and how to choose the final set of visualisation elements -plots, maps, tables- to be displayed in the dashboard. Then we will show how to customise the dashboard layout.
 
+Important: The templates of the files mentioned below you can find in the `library_path/eurostatRTool/extdata/` folder,
+where `library_path` is your folder with R packages, which you can find using `.libPaths()`. You can copy those files into your folder.
+
 ## Working with your own data: an introduction to files and display modes
 
 For creating the dashboard, we will rely in four main different files that should be created/provided by the person using the R package with the purpose of running functions for updating the input data, customising the dashboard and generating it, hereafter, the dashboard manager. 
