@@ -9,7 +9,7 @@ The package enables users to effortlessly customise the overall layout, update u
 and select specific visualisation modes and interpretative texts to feature in the dashboard. 
 This flexibility makes it easy to tailor the tool to specific needs, ensuring that the visualised data is both meaningful and accessible.
 
-A standout feature of eurostatRTool is the storyboard layout from Flexdashboard that organises information into a sequence of slides. 
+A standout feature of eurostatRTool is the storyboard layout from `Flexdashboard` that organises information into a sequence of slides. 
 This layout allows users to present a step-by-step narrative, providing readers with a more comprehensive understanding of the data. 
 The user-friendly navigation enables viewers to move back and forth through the data story at their own pace, fostering a more interactive and engaging exploration.
 
@@ -22,7 +22,7 @@ functioning.
 ### For Windows users: install Rtools
 
 For installing R packages from source on Windows, users also need to
-install Rtools, which provides the necessary tools for building R
+install `Rtools`, which provides the necessary tools for building R
 packages.
 
 1.  Download: go to the [Rtools download
