@@ -67,7 +67,6 @@ Once `renv` is set up in your project, you can install and manage dependencies w
 - shinydashboard (== 0.7.2)
 - sp (== 2.1.3)
 - tidyr (== 1.3.0)
-- tools (== 4.3.2)
 - utils (== 4.3.2)
 - xlsx (== 0.6.5)
 
