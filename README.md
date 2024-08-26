@@ -47,10 +47,6 @@ running:
 ``` r
 devtools::install_github("eurostat/eurostatRTool")
 ```
-
-This should directly install the package from Github, without any other
-steps. 
-
 The following packages are required: `configr`,  `dplyr`,  `DT`, `flexdashboard`, `htmltools`, `leaflet`, `lubridate`, `magick`,
 `magrittr`, `mapview`,  `metathis`, `plotly`, `rmarkdown`, `shiny`, `shinydashboard`, `sp`, `tidyr`, `utils` and `xlsx`.
 
