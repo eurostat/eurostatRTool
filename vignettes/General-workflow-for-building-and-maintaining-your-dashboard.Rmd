@@ -57,7 +57,13 @@ The two files containing the data respectively used in the Eurostatistics and th
 Regarding information on forecasts, the two files containing these data are `forecasts.xlsx` and `forecasts-italy.xlsx` for the Eurostatistics and NSI scenarios respectively. These Excel files contain as many sheets as forecasts (i.e., horizontal bar) plots to be displayed in the dashboard -three in the Eurostatistics scenario and just one in the NSI scenario-. However, both files share the same structure which must be also accurately followed by the dashboard manager to build his/her own forecasts plots. 
 
 In relation to the dashboard structure, the sample data files are
-`dashboard-structure.xlsx` and `dashboard-structure-italy.xlsx`, for the Eurostatistics and NSI scenarios, respectively. Both files also have the same structure, although the file for the NSI scenario contains a lower number of rows -lesser number of indicators to be displayed- and a lower number of columns -lesser number of display modes, as maps and tables are not implemented in this scenario-. 
+`dashboard-structure.xlsx` and `dashboard-structure-italy.xlsx`, for the Eurostatistics and NSI scenarios, respectively. The both scenarios (Eurostatistics and NSI scenarios) have different topics in their respective main menus.
+
+For the Eurostatistics dashboard, these topics include: Overview, Economy, Business and Trade, Labour Market, Cyclical Indicators, Trend-Cycle Estimates, and Forecasts.
+
+Meanwhile, the NSI dashboard presents: Overview, Economic Situation, Prices Outlook, Foreign Trade, and Labour Market Outlook.
+
+While all other options are customisable: colours, titles, headers, footer, logo, data, indicators, visualisation modes, etc., **the topics of the main menu in the two scenarios are not customisable.** 
 
 Finally, the sample files where the link between indicator codes and labels is defined are named `dim-labels.csv` and `dim-labels-italy.csv`, for the Eurostatistics and the NSI scenarios, respectively. The `DIM` column specifies categories within a single dimension relevant to each indicator. For instance, this could include geographic areas such as regions or countries, age groups, gender categories, or economic sectors, depending on the dimension applicable to the indicator. Both files mostly share their structure, although the column `group` is missing in the file for the NSI scenario. Further details in this regard are provided below in this vignette.
 
