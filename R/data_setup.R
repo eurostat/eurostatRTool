@@ -42,6 +42,7 @@ data <- function(){
 # @return A data frame.
 #
 # @import utils tools
+
 geo_labels <- function(){
 
   # If there is a dim-labels.csv file available in the user memory, read it.
@@ -139,7 +140,7 @@ menu_categories <- function() {
   scenario <- read_user_config_param("scenario")
   if (!is.null(scenario) && scenario == "nsi") {
     return(c("Economic situation", "Prices outlook", "Foreign trade",
-             "Labour market outlook"))
+             "Labour market outlook", "Human Development Index"))
   }
   return(c("Economy", "Business and Trade", "Labour market",
            "Cyclical indicators", "Trend-cycle estimates", "Forecasts"))
