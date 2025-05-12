@@ -286,178 +286,160 @@ timeline_chart <- function(data, geo_labels, colors_palette, indicator, chart_ti
 # @import dplyr plotly lubridate
 bar_chart <- function(data, geo_labels, colors_palette, indicator, chart_title = "",
                       chart_subtitle = "", dec_digit_format) {
-
-  custom_hoverformat <- paste("%{y:", dec_digit_format, "}", sep="")
-  chart_title <- get_title(chart_title, chart_subtitle)
-
-  #Number of colours in palette
+  
+  custom_hoverformat <- paste("%{y:", dec_digit_format, "}", sep = "")
+  chart_title      <- get_title(chart_title, chart_subtitle)
+  
+  # We only ever plot the two most recent periods, so palette needs exactly two colours
   palette_subset <- colors_palette[1:2]
-
+  
+  # Filter to our indicator
   data_filtered <- data %>%
     dplyr::filter(IND == indicator)
-
+  
+  # Find the most recent non-NA date
   date_last <- data_filtered %>%
-    dplyr::filter(is.na(obsValue) == FALSE) %>%
+    dplyr::filter(!is.na(obsValue)) %>%
     dplyr::filter(date == max(date)) %>%
-    dplyr::select(date) %>%
-    unique() %>%
     dplyr::pull(date) %>%
     as.Date()
-
-  if(data_filtered[1, "FREQ"] == "Q") {
-    date_previous <- lubridate::add_with_rollback(date_last, months(-3), roll_to_first = TRUE)
-    } else if (data_filtered[1, "FREQ"] == "M") {
-      date_previous <- lubridate::add_with_rollback(date_last, months(-1), roll_to_first = TRUE)
-      } else {
-        stop("BarChart function supports data only with monthly or quarterly frequency ")
-        }
-
+  
+  # Compute the “previous” period based on frequency (now including annual)
+  freq0 <- data_filtered$FREQ[1]
+  date_previous <- switch(
+    freq0,
+    "Q" = lubridate::add_with_rollback(date_last, lubridate::months(-3), roll_to_first = TRUE),
+    "M" = lubridate::add_with_rollback(date_last, lubridate::months(-1), roll_to_first = TRUE),
+    "A" = lubridate::add_with_rollback(date_last, lubridate::years(-1),  roll_to_first = TRUE),
+    stop("bar_chart only supports FREQ = 'M', 'Q', or 'A'")
+  )
+  
+  # Keep only last & previous, label & join
   data_filtered <- data_filtered %>%
-    dplyr::filter(date == date_last | date == date_previous) %>%
-    dplyr::mutate(DIM = dplyr::case_when(DIM == "EU27" ~ "EU",
-                                         DIM == "EA20" ~ "EA", # EA changed 4
-                                         TRUE ~ DIM),
-                  obsValue = round_half_up(obsValue, 1)
+    dplyr::filter(date %in% c(date_last, date_previous)) %>%
+    dplyr::mutate(
+      DIM      = dplyr::case_when(
+        DIM == "EU27" ~ "EU",
+        DIM == "EA20" ~ "EA",
+        TRUE ~ DIM
+      ),
+      obsValue = round_half_up(obsValue, 2),
+      date2    = dplyr::case_when(
+        FREQ == "Q" ~ paste0("Q", lubridate::quarter(date), "-", lubridate::year(date)),
+        FREQ == "M" ~ paste0(lubridate::month(date, label = TRUE, locale = "English"), "-", lubridate::year(date)),
+        FREQ == "A" ~ as.character(lubridate::year(date))
+      )
     ) %>%
-    dplyr::mutate(date2 = dplyr::case_when(
-      FREQ == "Q" ~ paste0("Q", lubridate::quarter(date), "-", lubridate::year(date)),
-      FREQ == "M" ~
-        paste0(lubridate::month(date, label = TRUE, locale = "English"), "-", lubridate::year(date)),
-      TRUE ~ "NA")
-      ) %>%
-    dplyr::inner_join(., geo_labels, by = dplyr::join_by(DIM == code)) %>%
+    dplyr::inner_join(geo_labels, by = dplyr::join_by(DIM == code)) %>%
     dplyr::select(-DIM) %>%
     dplyr::rename(DIM = label) %>%
-    dplyr::filter(is.na(obsValue) == FALSE)
-
+    dplyr::filter(!is.na(obsValue))
+  
+  # Determine ordering of bars (latest period by value) and of periods
   date_ordered <- data_filtered %>%
     dplyr::arrange(date) %>%
     dplyr::pull(date2) %>%
     unique()
-
+  
   geo_ordered <- data_filtered %>%
     dplyr::filter(date == max(date)) %>%
     dplyr::arrange(-obsValue) %>%
     dplyr::pull(DIM)
-
+  
+  # **Drop the original `date` column, then rename `date2` → `date`**
   data_filtered <- data_filtered %>%
-    dplyr::mutate(date = as.character(date)) %>%
-    dplyr::mutate(DIM = factor(DIM, levels = geo_ordered)) %>%
-    dplyr::mutate(date2 = factor(date2, levels = date_ordered)) %>%
     dplyr::select(-date) %>%
+    dplyr::mutate(
+      DIM   = factor(DIM,   levels = geo_ordered),
+      date2 = factor(date2, levels = date_ordered)
+    ) %>%
     dplyr::rename(date = date2) %>%
-    dplyr::group_by(date) %>%
     dplyr::arrange(date)
-
-  fig_widths <-
-    data_filtered[!is.na(data_filtered$DIM), c("DIM","group")] %>%
+  
+  # Compute relative widths for subplot columns (two periods)
+  fig_widths <- data_filtered %>%
     dplyr::distinct(DIM, group) %>%
     dplyr::count(group) %>%
-    {apply(.["n"], 2, function(x) x/sum(x))} %>%
+    {apply(.["n"], 2, function(x) x / sum(x))} %>%
     as.vector()
-
+  
+  # Build one small bar chart per period (group)
   plot_list <- list()
-  for (i in 1:length(fig_widths)) {
-    name = paste0("plot", i)
-    plot_list[[name]] <- plotly::plotly_build(
-      plotly::plot_ly(
-        data = data_filtered %>%
-          dplyr::filter(group == i) %>%
-          droplevels(),
-        x = ~DIM,
-        y = ~obsValue,
-        color = ~date,
-        colors = palette_subset,
-        type = "bar",
-        legendgroup = ~date,
-        showlegend = ifelse(i == 1, TRUE, FALSE),
-        hovertemplate = custom_hoverformat) %>%
-        plotly::config(displaylogo = FALSE) %>%
-        plotly::config(modeBarButtonsToRemove = c("sendDataToCloud", "editInChartStudio", "zoom2d", "pan2d",
-                                                  "select2d", "lasso2d", "drawclosedpath", "drawopenpath", "drawline",
-                                                  "drawrect", "drawcircle", "eraseshape", "autoScale2d", "resetScale2d")) %>%
-        plotly::layout(hovermode = "x",
-                       xaxis = list(
-                         fixedrange = TRUE,
-                         tickangle = -90
-                       ),
-                       separators = ". ",
-                       yaxis = list(
-                         fixedrange = TRUE,
-                         title = FALSE
-                       ))
-    )
-  }
-  fig <- plotly::subplot(
-    plot_list,
-    widths = fig_widths,
-    margin = 0.01,
-    shareY = TRUE
-  )
-
-  fig <- fig %>%
-    plotly::layout(
-      margin = list(t = 70, b = 0), # l=, r=,  pad = , b= 70
-      # height = chartHeight,
-      title = chart_title
-      )
-
-  # Mobile layout
-
-  custom_hoverformat <- paste("(%{x:", dec_digit_format, "}, %{y})", sep="")
-  plot_list <- list()
-  for (i in 1:length(fig_widths)) {
-    name = paste0("plot", i)
-    plot_list[[name]] <- plotly::plotly_build(
-      plotly::plot_ly(
-        data = data_filtered %>%
-          dplyr::filter(group == i) %>%
-          droplevels(),
-        y = ~DIM,
-        x = ~obsValue,
-        color = ~date,
-        colors = palette_subset,
-        type = "bar",
-        orientation = "h",
-        legendgroup = ~date,
-        showlegend = ifelse(i == 1, TRUE, FALSE),
-        hovertemplate = custom_hoverformat) %>%
-        plotly::config(displaylogo = FALSE) %>%
-        plotly::config(modeBarButtonsToRemove = c("sendDataToCloud", "editInChartStudio", "zoom2d", "pan2d",
-                                                  "select2d", "lasso2d", "drawclosedpath", "drawopenpath", "drawline",
-                                                  "drawrect", "drawcircle", "eraseshape", "autoScale2d", "resetScale2d")) %>%
-        plotly::layout(
-          xaxis = list(
-            fixedrange = TRUE,
-            title = FALSE
-          ),
-          separators = ". ",
-          yaxis = list(
-            autorange = "reversed",
-            fixedrange = TRUE,
-            # tickfont = list(size = 9),
-            title = FALSE
-          )
+  for (i in seq_along(fig_widths)) {
+    plot_list[[i]] <- plotly::plot_ly(
+      data = data_filtered %>% dplyr::filter(group == i),
+      x    = ~DIM, y = ~obsValue,
+      color = ~date, colors = palette_subset,
+      type = "bar", legendgroup = ~date,
+      showlegend = (i == 1),
+      hovertemplate = custom_hoverformat
+    ) %>%
+      plotly::config(
+        displaylogo = FALSE,
+        modeBarButtonsToRemove = c(
+          "sendDataToCloud","editInChartStudio","zoom2d","pan2d",
+          "select2d","lasso2d","drawclosedpath","drawopenpath",
+          "drawline","drawrect","drawcircle","eraseshape",
+          "autoScale2d","resetScale2d"
         )
-    )
+      ) %>%
+      plotly::layout(
+        hovermode = "x",
+        xaxis = list(fixedrange = TRUE, tickangle = -90),
+        yaxis = list(fixedrange = TRUE, title = FALSE),
+        separators = ". "
+      )
   }
-  small_fig <-
-    plotly::subplot(
-      plot_list,
-      nrows = length(fig_widths),
-      heights = fig_widths,
-      margin = 0.005,
-      shareX = TRUE) %>%
+  
+  # Combine into side-by-side subplot
+  fig <- plotly::subplot(
+    plot_list, widths = fig_widths,
+    margin = 0.01, shareY = TRUE
+  ) %>%
     plotly::layout(
-      margin = list(t = 70, b = 0), # l=, r=,  pad = , b= 70
-      height = 800,
+      margin = list(t = 70, b = 0),
       title = chart_title
     )
-
+  
+  # --- Mobile layout (horizontal bars) ---
+  custom_hoverformat <- paste("(%{x:", dec_digit_format, "}, %{y})", sep = "")
+  plot_list <- list()
+  for (i in seq_along(fig_widths)) {
+    plot_list[[i]] <- plotly::plot_ly(
+      data = data_filtered %>% dplyr::filter(group == i),
+      y    = ~DIM, x = ~obsValue,
+      color = ~date, colors = palette_subset,
+      type = "bar", orientation = "h",
+      legendgroup = ~date, showlegend = (i == 1),
+      hovertemplate = custom_hoverformat
+    ) %>%
+      plotly::config(
+        displaylogo = FALSE,
+        modeBarButtonsToRemove = c(
+          "sendDataToCloud","editInChartStudio","zoom2d","pan2d",
+          "select2d","lasso2d","drawclosedpath","drawopenpath",
+          "drawline","drawrect","drawcircle","eraseshape",
+          "autoScale2d","resetScale2d"
+        )
+      ) %>%
+      plotly::layout(
+        xaxis = list(fixedrange = TRUE, title = FALSE),
+        yaxis = list(autorange = "reversed", fixedrange = TRUE, title = FALSE),
+        separators = ". "
+      )
+  }
+  small_fig <- plotly::subplot(
+    plot_list, nrows = length(fig_widths),
+    heights = fig_widths, margin = 0.005, shareX = TRUE
+  ) %>%
+    plotly::layout(
+      margin = list(t = 70, b = 0),
+      height = 800,
+      title  = chart_title
+    )
+  
   return(list(fig = fig, small_fig = small_fig))
-
 }
-
 
 # Function for ecoin chart
 #
@@ -1218,7 +1200,7 @@ map <- function(data, geo_labels, indicator, chart_title = "",
     dplyr::mutate(DIM = dplyr::case_when(DIM == "EU27" ~ "EU",
                                          DIM == "EA20" ~ "EA", # EA changed 4
                                          TRUE ~ DIM),
-                  obsValue = round_half_up(obsValue, 1)
+                  obsValue = round_half_up(obsValue, 2)
     ) %>%
     dplyr::mutate(date2 = dplyr::case_when(
       FREQ == "Q" ~ paste0("Q", lubridate::quarter(date), "-", lubridate::year(date)),
@@ -1344,7 +1326,7 @@ table <- function(data, geo_labels, chart_title, sheet_name,
       dplyr::mutate(DIM = dplyr::case_when(DIM == "EU27" ~ "EU",
                                            DIM == "EA20" ~ "EA", # EA changed 4
                                            TRUE ~ DIM),
-                    obsValue = round_half_up(obsValue, 1)
+                    obsValue = round_half_up(obsValue, 2)
       ) %>%
       dplyr::inner_join(., geo_labels, by = dplyr::join_by(DIM == code)) %>%
       dplyr::filter(is.na(obsValue) == FALSE) %>%
