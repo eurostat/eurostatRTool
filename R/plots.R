@@ -79,11 +79,21 @@ timeline_chart <- function(data, geo_labels, colors_palette, indicator, chart_ti
     dplyr::select(-DIM) %>%
     dplyr::mutate(DIM = label) %>%
     dplyr::mutate(date = dplyr::case_when(
-      FREQ == "Q" ~ lubridate::add_with_rollback(date, months(-2), roll_to_first = TRUE), # adjust quarterly for display
-      FREQ == "M" ~ date,
-      FREQ == "A" ~ date,
+      FREQ == "Q" ~ lubridate::add_with_rollback(date, months(-2), roll_to_first = TRUE),
+      FREQ == "A" ~ lubridate::make_date(lubridate::year(date), 1, 1),  # set to Jan 1 of the year
       TRUE ~ date
     ))
+  
+  tick_format <- switch(
+    unique(data_filtered$FREQ)[1],
+    "Q" = "Q%q-%Y",
+    "M" = "%b-%Y",
+    "A" = "%Y",
+    "%Y"
+  )
+  dtick_value <- ifelse(tick_format == "%Y", "M12", NULL)
+  
+  
 
   # Factorize the DIM column to keep the same order as the data
   filtered_geo_labels <- intersect(geo_labels$label, unique(data_filtered$DIM))
@@ -167,12 +177,8 @@ timeline_chart <- function(data, geo_labels, colors_palette, indicator, chart_ti
 
       xaxis = list(
         title = FALSE,
-        tickformat = switch(data_filtered[1, "FREQ"],
-                            "Q" = "Q%q-%Y",
-                            "M" = "%b-%Y",
-                            "A" = "%Y",
-                            "%Y"),
-        dtick = ifelse(data_filtered[1, "FREQ"] == "A", "M12", NULL),
+        tickformat = tick_format,
+        dtick = dtick_value,
         rangeslider = list(
           visible = TRUE,
           bgcolor = "#F5F5F5",
@@ -197,12 +203,8 @@ timeline_chart <- function(data, geo_labels, colors_palette, indicator, chart_ti
       legend = list(orientation = "h", xanchor = "center", x = 0.5, y = -0.2),
       xaxis = list(
         title = FALSE,
-        tickformat = switch(data_filtered[1, "FREQ"],
-                            "Q" = "Q%q-%Y",
-                            "M" = "%b-%Y",
-                            "A" = "%Y",
-                            "%Y"),
-        dtick = ifelse(data_filtered[1, "FREQ"] == "A", "M12", NULL),
+        tickformat = tick_format,
+        dtick = dtick_value,
         fixedrange = TRUE
       )
       
