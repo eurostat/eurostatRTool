@@ -172,9 +172,18 @@ timeline_chart <- function(data, geo_labels, colors_palette, indicator, chart_ti
                             "M" = "%b-%Y",
                             "A" = "%Y",
                             "%Y"),
-        rangeslider = list(bgcolor="#F5F5F5",  type = "date",
-                           yaxis = list(range=list(NULL,NULL), rangemode="fixed"))
+        dtick = ifelse(data_filtered[1, "FREQ"] == "A", "M12", NULL),
+        rangeslider = list(
+          visible = TRUE,
+          bgcolor = "#F5F5F5",
+          thickness = 0.1,
+          bordercolor = "#CCCCCC",
+          yaxis = list(visible = FALSE),
+          tickformat = if (data_filtered[1, "FREQ"] == "A") "%Y" else NULL,
+          dtick = ifelse(data_filtered[1, "FREQ"] == "A", "M12", NULL)
+        )
       )
+      
     )
 
   # Small screen layout
@@ -192,8 +201,11 @@ timeline_chart <- function(data, geo_labels, colors_palette, indicator, chart_ti
                             "Q" = "Q%q-%Y",
                             "M" = "%b-%Y",
                             "A" = "%Y",
-                            "%Y")
+                            "%Y"),
+        dtick = ifelse(data_filtered[1, "FREQ"] == "A", "M12", NULL),
+        fixedrange = TRUE
       )
+      
     ) %>%
     plotly::style(legendgroup = NULL)
   
