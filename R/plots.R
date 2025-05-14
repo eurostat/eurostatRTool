@@ -424,7 +424,7 @@ bar_chart <- function(data, geo_labels, colors_palette, indicator,
       title = chart_title
     )
   
-  
+   
   # Mobile layout
   custom_hoverformat <- paste0("(%{x}, %{y:", dec_format, "})")
   plot_list <- vector("list", length(fig_widths))
