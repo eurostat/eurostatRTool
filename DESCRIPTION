@@ -1,7 +1,7 @@
 Package: eurostatRTool
 Title: Data Visualization and Interpretation for Short-Term Economic
         Analysis
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person("Ludovica", "Verrieri", , "ludovica.verrieri@gmail.com",
            role = c("aut", "cre"), comment = c(ORCID = "0009-0009-6343-5339"))
