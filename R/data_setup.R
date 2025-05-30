@@ -18,8 +18,15 @@ data <- function(){
   data_path <- file.path(user_data_path, "data.csv")
   data <- NULL
   if (file.exists(data_path)) {
-    data <- utils::read.csv(data_path)
-  } else {
+    data <- utils::read.csv(data_path, fileEncoding = "UTF-8", stringsAsFactors = FALSE)
+    char_cols <- sapply(data, is.character)
+    data[char_cols] <- lapply(data[char_cols], function(x) {
+      Encoding(x) <- "UTF-8"
+      x
+    })
+    
+  }
+  else {
     scenario <- read_user_config_param("scenario")
     if (!is.null(scenario) && scenario == "nsi") {
       data <- eurostatRTool::sample_data_italy
@@ -52,8 +59,15 @@ geo_labels <- function(){
   geo_labels_path <- file.path(user_data_path, "dim-labels.csv")
   geo_labels <- NULL
   if (file.exists(geo_labels_path)) {
-    geo_labels <- utils::read.csv(geo_labels_path)
-  } else {
+    geo_labels <- utils::read.csv(geo_labels_path, fileEncoding = "UTF-8", stringsAsFactors = FALSE)
+    char_cols <- sapply(geo_labels, is.character)
+    geo_labels[char_cols] <- lapply(geo_labels[char_cols], function(x) {
+      Encoding(x) <- "UTF-8"
+      x
+    })
+    
+  }
+  else {
     scenario <- read_user_config_param("scenario")
     if (!is.null(scenario) && scenario == "nsi") {
       geo_labels <- eurostatRTool::sample_dim_labels_italy
@@ -174,6 +188,12 @@ dashboard_structure_data <- function(indicators, dims=NULL) {
   }
 
   structure_data <- as.data.frame(structure_data)
+  char_cols <- sapply(structure_data, is.character)
+  structure_data[char_cols] <- lapply(structure_data[char_cols], function(x) {
+    Encoding(x) <- "UTF-8"
+    x
+  })
+  
   cols <- colnames(structure_data)
 
   # If one of the secondary columns for a visualisation typology is not
